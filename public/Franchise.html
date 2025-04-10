@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Become a CSI Franchise Partner</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/home.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .hero {
+            background: url('franchise-banner.jpg') center/cover no-repeat;
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .section {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: #002147;
+            margin-bottom: 1rem;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-table th,
+        .info-table td {
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-content h3 {
+            margin-top: 0;
+        }
+
+        .popup-content button {
+            margin-top: 1rem;
+            padding: 0.6rem 1.2rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background-color: #0056b3;
+        }
+
+        @keyframes popupFade {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animated {
+            animation: popupFade 0.4s ease-out;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>
+            <a href="#">CSI</a>
+        </div>
+        <div class="dropdown">
+            <a href="login.html" class="dropbtn">Login</a>
+            <div class="dropdown-content">
+                <a href="Admin.html">Admin Login</a>
+            </div>
+        </div>
+        <a href="index.html">Home</a>
+        <a href="Detail.html">Product Details</a>
+        <a href="RegOffice.html">Registered Office</a>
+        <a href="BranchOff.html">Branch Office</a>
+        <a href="Cart.html"><i class="fas fa-shopping-cart shopping-cart"></i></a>
+        <div class="dropdown">
+            <div class="dropbtn"><i class="fas fa-ellipsis-v"></i></div>
+            <div class="dropdown-content">
+                <a href="chatbot.html">Chatbot Help</a>
+                <a href="FAQ.html">Help</a>
+                <a href="logout.html">Logout</a>
+            </div>
+        </div>
+    </header>
+    <div>
+        <h1>Partner with CSI</h1>
+    </div>
+
+    <div class="hero">
+        <h1>Own a Piece of the Future</h1>
+        <p>Join our network and grow with the fastest-growing tech brand.</p>
+    </div>
+
+    <div class="section">
+        <h2>Why Franchise with CSI?</h2>
+        <ul>
+            <li>Established tech & electronics brand</li>
+            <li>Training, logistics, and marketing support</li>
+            <li>Low investment models available</li>
+            <li>Quick break-even potential</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Franchise Models</h2>
+        <table class="info-table">
+            <tr>
+                <th>Model</th>
+                <th>Size</th>
+                <th>Investment</th>
+                <th>Expected ROI</th>
+            </tr>
+            <tr>
+                <td>Kiosk</td>
+                <td>100–150 sq.ft</td>
+                <td>₹2–4 Lakh</td>
+                <td>8–12 months</td>
+            </tr>
+            <tr>
+                <td>Express Store</td>
+                <td>300–500 sq.ft</td>
+                <td>₹5–10 Lakh</td>
+                <td>6–10 months</td>
+            </tr>
+            <tr>
+                <td>Mega Hub</td>
+                <td>800+ sq.ft</td>
+                <td>₹12–20 Lakh</td>
+                <td>6–8 months</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Franchise Inquiry Form</h2>
+        <form onsubmit="handleSubmit(event)">
+            <input type="text" name="name" placeholder="Full Name" required />
+            <input type="email" name="email" placeholder="Email Address" required />
+            <input type="tel" name="phone" placeholder="Phone Number" required maxlength="10" />
+            <input type="text" name="location" placeholder="City / State" required />
+            <select name="model" required>
+                <option value="">Select Preferred Model</option>
+                <option value="kiosk">Kiosk</option>
+                <option value="express">Express Store</option>
+                <option value="mega">Mega Hub</option>
+            </select>
+            <textarea name="message" placeholder="Any message or questions?" rows="4"></textarea>
+            <button type="submit">Submit Inquiry</button>
+        </form>
+
+        <!-- Popup Modal -->
+        <div id="popup" class="popup">
+            <div class="popup-content animated">
+                <h3>🎉 You're All Set!</h3>
+                <p>Thanks for submitting your inquiry. We’ll reach out to you within 24 hours.</p>
+                <button onclick="closePopup()">Okay, Got it!</button>
+            </div>
+        </div>
+
+        <script>
+            function handleSubmit(e) {
+                e.preventDefault(); // prevent page reload
+                document.getElementById('popup').style.display = 'flex';
+
+                // Optional: Clear form
+                e.target.reset();
+            }
+
+            function closePopup() {
+                document.getElementById('popup').style.display = 'none';
+            }
+        </script>
+
+
+        <div class="section">
+            <h2>FAQs</h2>
+            <p><strong>Q: Do I need prior retail experience?</strong><br><strong>A:</strong> No, we provide full
+                training and guidance.</p>
+            <p><strong>Q: Can I open in a smaller town?</strong><br><strong>A:</strong> Yes! We're expanding into tier 2
+                and tier 3 cities.</p>
+            <p><strong>Q: Is stock provided?</strong><br><strong>A:</strong> Yes, we supply inventory directly from our
+                warehouse.</p>
+        </div>
+
+        <footer>
+            <div class="footer-container">
+                <!-- Footer Top -->
+                <div class="footer-links">
+                    <!-- Get to Know Us -->
+                    <div class="footer-section">
+                        <h3>Get to Know Us</h3>
+                        <a href="AboutUs.html">About Us</a><br>
+                        <a href="PaymentPolicy.html">Payment</a><br>
+                        <a href="AD.html">Authorized Dealers</a><br>
+                        <a href="Team.html">Team</a>
+                    </div>
+    
+                    <!-- Make Money with Us -->
+                    <div class="footer-section">
+                        <h3>Make Money with Us</h3>
+                        <a href="Vendor.html">Vendor Registration</a><br>
+                        <a href="collab.html">Collaboration </a><br>
+                        <a href="Franchise.html">Franchise</a><br>
+                        <a href="Advertise.html">Advertise With Us</a>
+                    </div>
+    
+                    <!-- Customer Service -->
+                    <div class="footer-section">
+                        <h3>Customer Service</h3>
+                        <a href="Contact.html">Help Center</a><br>
+                        <a href="FAQ.html">Returns & Refunds</a><br>
+                        <a href="feedback.html">Feedback</a><br>
+                        <a href="Searchtrack.html">Order Tracking</a><br>
+                    </div>
+    
+                    <!-- Connect with Us -->
+                    <div class="footer-section">
+                        <h3>Connect with Us</h3>
+                        <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a><br>
+                        <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a><br>
+                        <a href="mailto:csi@csimumbai.com" aria-label="Email">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Footer Bottom -->
+                <div class="footer-bottom" style="color:blue">
+                    <p>&copy; 2023 Computer Solutions Ind. Pvt. Ltd. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+</body>
+
+</html>

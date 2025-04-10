@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shopping Cart</title>
+        <link rel="stylesheet" href="css/Cart.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <style>
+    </style>
+    </head>
+
+    <body>
+        <div class="navbar">
+            <i class="fa-solid fa-arrow-left" onclick="goBack()"
+                style="font-size: 24px; cursor: pointer;"></i>
+        </div>
+        <div class="cart-container">
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+                <button>🔍</button>
+            </div>
+            <table class="cart-table" border="1px">
+                <tr style="background-color:#9875ea ;">
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price (₹)</th>
+                    <th>Actions</th>
+                </tr>
+                <tbody id="cart-items"></tbody>
+            </table>
+            <div class="total-price">Total: ₹<span
+                    id="total-price">0</span></div>
+            <button class="proceed-btn" onclick="proceedToCheckout()">Proceed to
+                Checkout</button>
+        </div>
+        <div class="login-popup" id="loginPopup">
+            <p>You must log in to proceed!</p>
+            <button onclick="redirectToLogin()">Login</button>
+            <button onclick="checkLoginAndProceed()">Close</button>
+        </div>
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script>
+        console.log(sessionStorage.getItem("userSession"));
+        const authFirebaseConfig = {
+            apiKey: "AIzaSyALS-1EI3vC3_e3BfdfbfQR2rT_H-RQUVg",
+            authDomain: "ecommerce-website-ff296.firebaseapp.com",
+            projectId: "ecommerce-website-ff296",
+            storageBucket: "ecommerce-website-ff296.firebasestorage.app",
+            messagingSenderId: "215343343164",
+            appId: "1:215343343164:web:cb3ca6d36c4336e8280539",
+            measurementId: "G-9PH1X13P98"
+        };
+
+        const app = firebase.initializeApp(authFirebaseConfig);
+        const auth = firebase.auth();
+        const db = app.firestore();
+
+        console.log(auth);
+
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log("✅ Auth persistence set to LOCAL");
+            })
+            .catch((error) => {
+                console.error("❌ Persistence error:", error.message);
+            });
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("User is logged in:", user.email);
+            } else {
+                console.log("No user is logged in.");
+            }
+        });
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                console.log("User signed in:", user.email);
+                sessionStorage.setItem("userSession", JSON.stringify(user));
+                window.location.href = "home.html";
+            })
+            .catch((error) => {
+                console.error("Error signing in:", error.message);
+            });
+        auth.onAuthStateChanged((user) => {
+            if (!user || !sessionStorage.getItem("userSession")) {
+                window.location.href = "login.html";
+            }
+        });
+        // Check if the user is logged in when the page loads
+        function checkSession() {
+            const userSession = sessionStorage.getItem('userSession');
+            if (!userSession) {
+                // Redirect only if session missing
+                window.location.href = 'login.html';
+            } else {
+                try {
+                    const user = JSON.parse(userSession);
+                    console.log("User in cart page:", user.email);
+                    // continue loading cart...
+                } catch (e) {
+                    sessionStorage.removeItem('userSession');
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+        checkSession(); // Call this function when the page loads
+        function goBack() {
+            window.history.back();
+        }
+        function proceedToCheckout() {
+            if (sessionStorage.getItem('userSession')) {
+                window.location.href = 'orderSummary.html';
+            } else {
+                document.getElementById('loginPopup').style.display = 'block';
+            }
+        }
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+        function checkLoginAndProceed() {
+            document.getElementById('loginPopup').style.display = 'none';
+        }
+        function displayCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            console.log(cart);
+            let cartItems = document.getElementById('cart-items');
+            let totalPrice = 0;
+
+            cartItems.innerHTML = ''; // Clear previous items before rendering
+
+            cart.forEach(item => {
+                // Generate and assign a random ID if the item does not already have one
+                if (!item.id) {
+                    item.id = generateRandomId();
+                }
+
+                let row = cartItems.insertRow();
+
+                // Name Column
+                let nameCell = row.insertCell(0);
+                nameCell.textContent = item.title;
+
+                // Quantity Column
+                let quantityCell = row.insertCell(1);
+                quantityCell.textContent = item.quantity;
+
+                console.log("cartid: ", item.id);
+
+                // Price Column
+                let priceCell = row.insertCell(2);
+                priceCell.textContent = (item.price * item.quantity).toFixed(2);
+
+                // Actions Column
+                let actionCell = row.insertCell(3);
+                actionCell.innerHTML = `
+                <button class="quantity-btn" onclick="decreaseQuantity('${item.id}')">-</button>
+                <span>${item.quantity}</span>
+                <button class="quantity-btn" onclick="increaseQuantity('${item.id}')">+</button>
+                <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+            `;
+
+                // Calculate total price
+                totalPrice += item.price * item.quantity;
+            });
+
+            // Save updated cart with unique IDs
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Update total price display
+            document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+            console.log("cart: ", cart);
+        }
+
+        // Function to generate a random unique ID
+        function generateRandomId() {
+            return 'id-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function increaseQuantity(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let item = cart.find(item => String(item.id) === String(itemId));
+
+            if (item) {
+                item.quantity++;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                displayCart();
+            }
+        }
+
+        function decreaseQuantity(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            let item = cart.find(item => String(item.id) === String(itemId));
+
+            if (item && item.quantity > 1) {
+                item.quantity--;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                displayCart();
+            }
+        }
+
+        function removeItem(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => String(item.id) !== String(itemId));
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        displayCart();
+    </script>
+    </body>
+
+</html>

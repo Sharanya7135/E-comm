@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "Ecomm",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

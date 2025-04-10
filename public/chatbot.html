@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Firebase SDK (v9+ with module support) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMZNa9JLy1nvuvrVIESOpxQOYUtuNJf10",
+            authDomain: "",
+            projectId: "chatbot-ai-64560",
+            storageBucket: "",
+            messagingSenderId: "710558583006",
+            appId: "1:710558583006:web:38f561c20f5bdfa02f9a4f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.serverTimestamp = serverTimestamp;
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        html,
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #000, #0f0c29, #302b63, #24243e);
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+        }
+
+        #chat-container {
+            width: 400px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid #87CEFA;
+            /* Light blue */
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            /* White with slight transparency */
+            box-shadow: 0 0 15px rgba(135, 206, 250, 0.6);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
+            }
+
+            100% {
+                box-shadow: 0 0 20px #0ff, 0 0 40px #f0f;
+            }
+        }
+
+        #chat-box {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            max-height: 400px;
+            color: #0ff;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: rgba(173, 216, 230, 0.6);
+            /* Light Blue */
+            color: #005577;
+            /* Darker Blue */
+            padding: 10px 14px;
+            border-radius: 15px 15px 0 15px;
+            margin: 5px;
+            max-width: 75%;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 85, 119, 0.3);
+        }
+
+        .bot {
+            align-self: flex-start;
+            background: rgba(240, 248, 255, 0.8);
+            /* AliceBlue */
+            color: #003344;
+            /* Deep Blue */
+            padding: 10px 14px;
+            border-radius: 15px 15px 15px 0;
+            margin: 5px;
+            max-width: 75%;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 51, 68, 0.3);
+        }
+
+
+        #input-container {
+            display: flex;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid cyan;
+            outline: none;
+            font-size: 16px;
+            background: black;
+            color: cyan;
+            box-shadow: 0 0 10px cyan;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        button {
+            background: black;
+            color: cyan;
+            border: 1px solid cyan;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            box-shadow: 0 0 10px cyan;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        button:hover {
+            background: cyan;
+            color: black;
+            box-shadow: 0 0 20px cyan, 0 0 40px magenta;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: #9875ea;
+            padding: 10px;
+            color: white;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            padding: 10px;
+        }
+
+        .navbar button:hover {
+            background-color: rgba(109, 7, 234, 0.695);
+            border-radius: 5px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="navbar">
+        <i class="fa-solid fa-arrow-left" onclick="goBack()" style="font-size: 24px; cursor: pointer;"></i>
+    </div>
+    <div id="chat-container" style="padding-top: 60px;">
+        <div id="chat-box"></div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Enter your message..." />
+            <button onclick="sendMsg()">Send</button>
+        </div>
+    </div>
+    <script src="js/bot.js">
+    </script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+
+</html>

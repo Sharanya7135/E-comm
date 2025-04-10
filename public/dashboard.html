@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Dashboard</title>
+    <link rel="stylesheet" href="css/AdminDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+            <div class="admin-info">
+                <div class="admin-avatar">
+                    <img src="img/logo.jpg" alt="CSI LOGO">
+                </div>
+                <div class="admin-name" id="adminName">Admin</div>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item active">
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="adminPanel.html">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Orders</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="admin-manage.html">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Manage Stock</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="review.html">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </a>
+            </li>
+            <li class="nav-item" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <div class="breadcrumb">Home / Dashboard</div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-change">+5.2% this week</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>New Orders</h3>
+                <div class="stat-value" id="newOrders">0</div>
+                <div class="stat-change">+12.6% this week</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Feedback Count</h3>
+                <div class="stat-value" id="feedbackCount">0</div>
+                <div class="stat-change">+5.0% this week</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Conversion Rate</h3>
+                <div class="stat-value" id="conversionRate">0%</div>
+                <div class="stat-change negative">-2.1% this week</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // Firebase Config (Main)
+        const firebaseConfig = {
+            apiKey: "AIzaSyALS-1EI3vC3_e3BfdfbfQR2rT_H-RQUVg",
+            authDomain: "ecommerce-website-ff296.firebaseapp.com",
+            databaseURL: "https://ecommerce-website-ff296-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "ecommerce-website-ff296",
+            storageBucket: "ecommerce-website-ff296.firebasestorage.app",
+            messagingSenderId: "215343343164",
+            appId: "1:215343343164:web:cb3ca6d36c4336e8280539",
+            measurementId: "G-9PH1X13P98"
+        };
+
+        // Initialize Firebase
+        const mainApp = firebase.initializeApp(firebaseConfig);
+        const db = mainApp.firestore();
+
+        // Firebase Config (Orders - RTDB)
+        const ordersConfig = {
+            apiKey: "AIzaSyATcihhtMAJzrk5QnlvjHz4myvODluSkkY",
+            authDomain: "orders-5bef7.firebaseapp.com",
+            databaseURL: "https://orders-5bef7-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "orders-5bef7",
+            storageBucket: "orders-5bef7.firebasestorage.app",
+            messagingSenderId: "112506351374",
+            appId: "1:112506351374:web:805ddf17e9f14df9b1f15f",
+            measurementId: "G-WLLLGSN8SN"
+        };
+        const ordersApp = firebase.initializeApp(ordersConfig, "ordersApp");
+        const ordersDb = ordersApp.database(); // RTDB for orders
+
+        // Firebase Config (Feedback - RTDB)
+        const feedbackConfig = {
+            apiKey: "AIzaSyBpGap1ccsVKsfE0y3XlYlBhoXplBfCNKg",
+            authDomain: "feedback-6fa2d.firebaseapp.com",
+            databaseURL: "https://feedback-6fa2d-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "feedback-6fa2d",
+            storageBucket: "feedback-6fa2d.firebasestorage.app",
+            messagingSenderId: "1091709526633",
+            appId: "1:1091709526633:web:7244a17e45840c21f338f8",
+            measurementId: "G-LG17NLZMYR"
+        };
+        const feedbackApp = firebase.initializeApp(feedbackConfig, "feedbackApp");
+        const feedbackDb = feedbackApp.database(); // RTDB for feedback
+
+        // DOM Elements
+        const adminNameElement = document.getElementById('adminName');
+        const totalUsersElement = document.getElementById('totalUsers');
+        const newOrdersElement = document.getElementById('newOrders');
+        const feedbackCountElement = document.getElementById('feedbackCount');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Check Auth Status
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                loadAdminInfo(user.uid);
+                loadDashboardStats();
+            } else {
+                window.location.href = 'Admin.html';
+            }
+        });
+
+        // Load Admin Info
+        function loadAdminInfo(userId) {
+            db.collection('users').doc(userId).get()
+                .then(function (doc) {
+                    if (doc.exists) {
+                        var userData = doc.data();
+                        adminNameElement.textContent = userData.name || 'Admin';
+                        document.querySelector('.admin-avatar').textContent =
+                            (userData.name ? userData.name.charAt(0).toUpperCase() : 'A');
+                    }
+                }).catch(function (error) {
+                    console.error("Error loading admin info:", error);
+                });
+        }
+
+        // Load Dashboard Stats
+        function loadDashboardStats() {
+            let totalUsers = 0;
+            let totalOrders = 0;
+
+            // Fetch total users from main database
+            db.collection('users').get()
+                .then(snapshot => {
+                    totalUsers = snapshot.size;
+                    totalUsersElement.textContent = snapshot.size;
+                    console.log('Total Users:', snapshot.size); // Debug log
+                    // Calculate conversion rate after both users and orders are fetched
+                    updateConversionRate(totalUsers, totalOrders);
+                })
+                .catch(error => {
+                    console.error('Error fetching users:', error);
+                    totalUsersElement.textContent = 'Error';
+                });
+
+            // Fetch total orders from RTDB
+            ordersDb.ref('orders').once('value')
+                .then(snapshot => {
+                    const ordersData = snapshot.val();
+                    totalOrders = ordersData ? Object.keys(ordersData).length : 0;
+                    newOrdersElement.textContent = totalOrders;
+                    console.log('Total Orders:', totalOrders);
+                    // Calculate conversion rate after both users and orders are fetched
+                    updateConversionRate(totalUsers, totalOrders);
+                })
+                .catch(error => {
+                    console.error('Error fetching orders:', error);
+                    newOrdersElement.textContent = 'Error';
+                });
+
+            // Fetch total feedback from RTDB
+            feedbackDb.ref('feedbacks').once('value')
+                .then(snapshot => {
+                    const feedbackData = snapshot.val();
+                    const feedbackCount = feedbackData ? Object.keys(feedbackData).length : 0;
+                    feedbackCountElement.textContent = feedbackCount;
+                    console.log('Total Feedback:', feedbackCount);
+                })
+                .catch(error => {
+                    console.error('Error fetching feedback:', error);
+                    feedbackCountElement.textContent = 'Error';
+                });
+        }
+        // Function to calculate and update conversion rate
+        function updateConversionRate(totalUsers, totalOrders) {
+            const conversionRateElement = document.getElementById('conversionRate');
+            if (totalUsers === 0) {
+                conversionRateElement.textContent = '0%'; // Avoid division by zero
+                return;
+            }
+            const conversionRate = (totalOrders / totalUsers) * 100;
+            conversionRateElement.textContent = conversionRate.toFixed(2) + '%';
+            console.log('Conversion Rate:', conversionRate.toFixed(2) + '%');
+        }
+        // Logout Function
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            firebase.auth().signOut().then(function () {
+                window.location.href = 'Admin.html';
+            }).catch(function (error) {
+                console.error("Error signing out:", error);
+            });
+        });
+
+    </script>
+</body>
+
+</html>

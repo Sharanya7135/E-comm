@@ -1,0 +1,242 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  h2, h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+  }
+  
+  h2 {
+    font-size: 32px;
+    font-weight: 600;
+  }
+  
+  h3 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+  
+  #product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  .product-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    width: 280px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .product-card h4 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #2c3e50;
+  }
+  
+  .product-card p {
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  .product-card .price {
+    font-weight: bold;
+    color: #e74c3c;
+    font-size: 20px;
+    margin: 10px 0;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  
+  button {
+    background: #7a5bb0;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 5px;
+    transition: background-color 0.2s ease;
+    flex: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  button:hover {
+    background: #b956f7;
+  }
+  
+  button.edit {
+    background: rgb(116, 156, 215);
+  }
+  
+  button.edit:hover {
+    background: rgb(49, 118, 222);
+  }
+  
+  button.update {
+    background: #f57474;
+  }
+  
+  button.update:hover {
+    background: #ec4e32;
+  }
+  
+  @media (max-width: 768px) {
+    .product-card {
+      width: calc(50% - 25px);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .product-card {
+      width: 100%;
+    }
+    
+  }
+  /* Sidebar styles */
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px 0;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid #3d5368;
+}
+
+.sidebar-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: white; /* Ensure it's visible */
+  text-align: center;
+}
+
+/* Shift the main content to the right */
+.main-content {
+    margin-left: 250px; /* Adjust this according to sidebar width */
+    padding: 30px;
+}
+ 
+.admin-info {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.admin-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4a90e2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.admin-name {
+  font-size: 14px;
+}
+
+.nav-menu {
+  list-style: none;
+  padding: 20px 0;
+}
+
+.nav-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.nav-item:hover, .nav-item.active {
+  background-color: #3d5368;
+}
+
+.nav-item a {
+  color: white;
+  text-decoration: none;
+  width: 100%;
+}
+.breadcrumb-container {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #777;
+}
+.search-container {
+  position: relative;
+  width: 350px;
+  margin: 20px auto;
+}
+#search-box {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s ease-in-out;
+}
+#search-box:focus {
+  border-color: #6f42c1;
+  box-shadow: 0 0 8px rgba(111, 66, 193, 0.5);
+}
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6f42c1;
+  cursor: pointer;
+}

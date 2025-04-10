@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Delivery Details</title>
+        <link rel="stylesheet" href="css/delivery.css">
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+        <style>
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+    </style>
+    </head>
+
+    <body>
+        <h2 id="welcome-message">Delivery Details</h2>
+        <form id="delivery-form">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div>
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" maxlength="10" pattern="\d{10}"
+                    required>
+            </div>
+            <div>
+                <label for="building">Building Name/Number:</label>
+                <input type="text" id="building" required>
+            </div>
+            <div>
+                <label for="landmark">Landmark:</label>
+                <input type="text" id="landmark">
+            </div>
+            <div>
+                <label for="pincode">Pincode:</label>
+                <input type="text" id="pincode" required maxlength="6"
+                    pattern="\d{6}" title="Enter a 6-digit Pincode">
+            </div>
+            <div>
+                <label for="address">Address:</label>
+                <textarea rows='4' cols='5' id="address" required></textarea>
+            </div>
+            <div id="error-message" class="error-message"></div>
+            <button type="button" onclick="submitToFirebase()">Proceed to
+                Payment</button>
+        </form>
+
+        <script>
+        // Firebase configuration (Replace with your own Firebase Config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcpc_vFR_3G8oGHDDiL223pHJIff9MWD0",
+            authDomain: "userdetails-72c54.firebaseapp.com",
+            databaseURL: "https://userdetails-72c54-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "userdetails-72c54",
+            storageBucket: "userdetails-72c54.firebasestorage.app",
+            messagingSenderId: "568507834384",
+            appId: "1:568507834384:web:0e9c9f2d590306fbe82a95",
+            measurementId: "G-FXN3806TQM"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function checkSession() {
+            if (!localStorage.getItem('userSession')) {
+                // Redirect to login if no session is found
+                window.location.href = 'login.html';
+            }
+        }
+        window.onload = function () {
+            checkSession(); // Ensure session exists
+            displayUserName(); // Show user name
+        };
+        function displayUserName() {
+            let userName = localStorage.getItem('userName'); // Login se naam lo
+            if (userName) {
+                document.getElementById('welcome-message').innerText = "Hello, " + userName + " - Enter Delivery Details";
+            }
+        }
+        function submitToFirebase() {
+            let name = document.getElementById('name').value.trim();
+            let phone = document.getElementById('phone').value.trim();
+            let building = document.getElementById('building').value.trim();
+            let landmark = document.getElementById('landmark').value.trim();
+            let pincode = document.getElementById('pincode').value.trim();
+            let address = document.getElementById('address').value.trim();
+            let errorMessage = document.getElementById('error-message');
+
+            errorMessage.style.display = 'none';
+            errorMessage.innerHTML = '';
+
+            if (!name) {
+                errorMessage.innerHTML = "Please enter your Name.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+            if (!phone.match(/^\d{10}$/)) {
+                errorMessage.innerHTML = "Please enter a valid 10-digit phone number.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+            if (!pincode.match(/^\d{6}$/)) {
+                errorMessage.innerHTML = "Please enter a valid 6-digit pincode.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Retrieve cart items from localStorage
+            let cartItems = localStorage.getItem("cart");
+            if (cartItems) {
+                cartItems = JSON.parse(cartItems);
+            } else {
+                cartItems = []; // If no cart items exist
+            }
+            // Retrieve cart items from localStorage
+            cartItems = localStorage.getItem("cart");
+            if (cartItems) {
+                cartItems = JSON.parse(cartItems);
+            } else {
+                cartItems = []; // If no cart items exist
+            }
+
+            // Check if cart is empty
+            if (cartItems.length === 0) {
+                errorMessage.innerHTML = "Your cart is empty! Please add items before proceeding.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            console.log("Cart Items:", cartItems); // Debugging log
+
+            let userId = database.ref("deliveryDetails").push().key;
+
+            let userDetails = {
+                userId: userId,
+                name: name,
+                phone: phone,
+                building: building,
+                landmark: landmark,
+                pincode: pincode,
+                address: address,
+                cart: cartItems
+            };
+
+            console.log("Saving to Firebase:", userDetails); // Debugging log
+
+            database.ref("deliveryDetails/" + userId).set(userDetails)
+                .then(() => {
+                    console.log("Data saved in Firebase successfully!");
+                    localStorage.setItem('deliveryDetails', JSON.stringify(userDetails));
+                    console.log("Saved in localStorage:", localStorage.getItem("deliveryDetails")); // Debugging
+                    alert("Delivery details submitted successfully!");
+                    window.location.href = 'payment.html';
+                })
+                .catch(error => {
+                    errorMessage.innerHTML = "Error saving data: " + error.message;
+                    errorMessage.style.display = 'block';
+                });
+        }
+        function logout() {
+            localStorage.removeItem('userSession'); // Remove localStorage data
+            localStorage.removeItem('userSession'); // Also remove from localStorage if stored there
+            window.location.href = 'Cart.html'; // Redirect to cart or login page
+        }
+    </script>
+    </body>
+
+</html>

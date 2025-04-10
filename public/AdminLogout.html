@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Logout</title>
+        <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(157, 117, 227);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .logout-container {
+            padding: 30px;
+            width: 320px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .logout-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .logout-container p {
+            margin-bottom: 20px;
+        }
+
+        .logout-container button {
+            padding: 12px 20px;
+            background: #421798;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-container button:hover {
+            background: #421dba;
+            transform: scale(1.05);
+        }
+    </style>
+    </head>
+    <body>
+
+        <div class="logout-container">
+            <h2>Admin Logout</h2>
+            <p>Are you sure you want to log out?</p>
+            <button id="logoutButton">Logout</button>
+        </div>
+
+        <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firebase configuration (same as your login page)
+        const firebaseConfig = {
+            apiKey: "AIzaSyALS-1EI3vC3_e3BfdfbfQR2rT_H-RQUVg",
+            authDomain: "ADMIN",
+            projectId: "ecommerce-website-ff296",
+            storageBucket: "",
+            messagingSenderId: "215343343164",
+            appId: "1:215343343164:web:cb3ca6d36c4336e8280539"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Logout function
+        document.addEventListener("DOMContentLoaded", function() {
+            const logoutButton = document.getElementById("logoutButton");
+
+            logoutButton.addEventListener("click", function() {
+                signOut(auth).then(() => {
+                    localStorage.removeItem("adminSession"); // Clear session
+                    alert("Logged out successfully!");
+                    window.location.href = "Admin.html"; // Redirect to login page
+                }).catch((error) => {
+                    alert("Error: " + error.message);
+                });
+            });
+        });
+    </script>
+
+    </body>
+</html>

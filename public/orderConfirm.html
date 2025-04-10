@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Confirmation</title>
+        <link rel="stylesheet" href="css/OC.css">
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    </head>
+
+    <body>
+        <canvas id="confettiCanvas"
+            style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></canvas>
+        <div class="confirmation-container">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+            </div>
+
+            <h1>Order Confirmed!</h1>
+            <p class="thank-you-message">Thank you for your purchase.</p>
+            <p class="processing-message">Your order is being processed and will
+                be shipped soon.</p>
+
+            <div class="order-details">
+                <div class="detail-row">
+                    <span class="detail-label">Order ID:</span>
+                    <span class="detail-value" id="orderId"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Transaction ID:</span>
+                    <span class="detail-value" id="transactionId"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date:</span>
+                    <span class="detail-value" id="orderDate"></span>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="primary-button" onclick="goToTrackOrder()">Track
+                    Order</button>
+                <button class="secondary-button" onclick="goToHome()">Return to
+                    Home</button>
+            </div>
+        </div>
+
+        <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyATcihhtMAJzrk5QnlvjHz4myvODluSkkY",
+            authDomain: "orders-5bef7.firebaseapp.com",
+            databaseURL: "https://orders-5bef7-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "orders-5bef7",
+            storageBucket: "orders-5bef7.firebasestorage.app",
+            messagingSenderId: "112506351374",
+            appId: "1:112506351374:web:805ddf17e9f14df9b1f15f",
+            measurementId: "G-WLLLGSN8SN"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        // Check user session when page loads
+        function checkSession() {
+            let userSession = localStorage.getItem('userSession');
+
+            if (!userSession) {
+                // Redirect to login page if session is missing
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+        // Call checkSession when the page loads
+        window.onload = checkSession;
+
+        // Function to generate a random ID
+        function generateRandomId() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        // Function to format current date
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Generate and display Order ID, Transaction ID, and Date
+        const orderId = "ORD" + generateRandomId();
+        const transactionId = "TXN" + generateRandomId();
+        const orderDate = formatDate(new Date());
+
+        document.getElementById("orderId").textContent = orderId;
+        document.getElementById("transactionId").textContent = transactionId;
+        document.getElementById("orderDate").textContent = orderDate;
+
+        // Store order ID in localStorage
+        localStorage.setItem("orderId", orderId);
+
+        // Retrieve delivery details from localStorage
+        let deliveryDetails = localStorage.getItem("deliveryDetails");
+
+        if (deliveryDetails) {
+            deliveryDetails = JSON.parse(deliveryDetails); // Parse JSON
+            console.log("Loaded Delivery Details:", deliveryDetails);
+        } else {
+            console.log("No Delivery Details Found!");
+            deliveryDetails = {};
+        }
+
+        console.log("Retrieved Delivery Details:", deliveryDetails); // Debugging log
+        // Retrieve cart items from localStorage
+        let cartItems = localStorage.getItem("cart");
+        if (cartItems) {
+            cartItems = JSON.parse(cartItems);
+        } else {
+            cartItems = [];
+        }
+
+        console.log("Cart Items:", cartItems); // Debugging log
+
+        let orderData = {
+            orderId: orderId,
+            transactionId: transactionId,
+            orderDate: orderDate,
+            cart: cartItems,
+            status: "Pending",
+            name: deliveryDetails.name || "Unknown",
+            phone: deliveryDetails.phone || "N/A",
+            address: `${deliveryDetails.building || ""}, ${deliveryDetails.landmark || ""}, ${deliveryDetails.address || ""}`,
+            pincode: deliveryDetails.pincode || "N/A"
+        };
+
+        console.log("Final Order Data:", orderData);
+        db.ref("orders").push(orderData)
+            .then(() => console.log("Order saved successfully"))
+            .catch(error => console.error("Error saving order:", error));
+
+
+        function goToTrackOrder() {
+            window.location.href = "trackOrder.html?orderId=" + orderId;
+        }
+
+        function goToHome() {
+            window.location.href = "index.html";
+        }
+    </script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+        <script>
+        // Fire confetti when page loads
+        window.onload = function () {
+            const duration = 2 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
+
+            const interval = setInterval(function () {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                // random colors from a palette
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() - 0.2
+                    }
+                });
+            }, 250);
+        };
+    </script>
+        <audio id="confirmationSound" src="img/success.mp3"
+            preload="auto"></audio>
+
+        <script>
+        // Play sound on load
+        const sound = document.getElementById("confirmationSound");
+        if (sound) {
+            sound.play().catch(e => {
+                // Handle if autoplay is blocked
+                console.warn("Auto-play prevented:", e);
+            });
+        }
+
+    </script>
+    </body>
+
+</html>

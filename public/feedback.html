@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .feedback-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .rating>input {
+            display: none;
+        }
+
+        .rating>label {
+            position: relative;
+            width: 1.1em;
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .rating>label::before {
+            content: "★";
+            position: absolute;
+            opacity: 1;
+            /* Change from 0 to 1 */
+        }
+
+        .rating>label:hover:before,
+        .rating>label:hover~label:before {
+            opacity: 1 !important;
+        }
+
+        .rating>input:checked~label:before {
+            opacity: 1;
+        }
+
+        .rating>input:checked~label {
+            color: #ffc107;
+        }
+
+        .checkboxes label {
+            display: inline-block;
+            margin-right: 15px;
+            font-weight: normal;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 20px auto 0;
+            width: 200px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .modal button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .modal button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="feedback-container">
+        <h1>Customer Feedback</h1>
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="name">Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>How would you rate your overall experience? <span class="required">*</span></label>
+                <div class="rating">
+                    <input type="radio" name="rating" id="star5" value="5" required>
+                    <label for="star5" title="Excellent"></label>
+                    <input type="radio" name="rating" id="star4" value="4">
+                    <label for="star4" title="Good"></label>
+                    <input type="radio" name="rating" id="star3" value="3">
+                    <label for="star3" title="Average"></label>
+                    <input type="radio" name="rating" id="star2" value="2">
+                    <label for="star2" title="Poor"></label>
+                    <input type="radio" name="rating" id="star1" value="1">
+                    <label for="star1" title="Terrible"></label>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="category">What aspect of our service are you providing feedback on?</label>
+                <select id="category" name="category">
+                    <option value="">Please select...</option>
+                    <option value="product">Product Quality</option>
+                    <option value="website">Website Experience</option>
+                    <option value="customer-service">Customer Service</option>
+                    <option value="shipping">Shipping & Delivery</option>
+                    <option value="returns">Returns Process</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>What did you like about our service? (Select all that apply)</label>
+                <div class="checkboxes">
+                    <label><input type="checkbox" name="likes" value="ease"> Ease of Use</label>
+                    <label><input type="checkbox" name="likes" value="quality"> Quality</label>
+                    <label><input type="checkbox" name="likes" value="price"> Price</label>
+                    <label><input type="checkbox" name="likes" value="support"> Customer Support</label>
+                    <label><input type="checkbox" name="likes" value="speed"> Speed/Efficiency</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comments">Please share your feedback or suggestions <span class="required">*</span></label>
+                <textarea id="comments" name="comments" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="improvements">How can we improve our service?</label>
+                <textarea id="improvements" name="improvements"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Would you recommend us to others?</label>
+                <div class="checkboxes">
+                    <label><input type="radio" name="recommend" value="yes"> Yes</label>
+                    <label><input type="radio" name="recommend" value="no"> No</label>
+                    <label><input type="radio" name="recommend" value="maybe"> Maybe</label>
+                </div>
+            </div>
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+    <!-- Success Popup Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <p>Thank you for your feedback! Your response has been submitted.</p>
+            <button id="closeModal">OK</button>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpGap1ccsVKsfE0y3XlYlBhoXplBfCNKg",
+            authDomain: "feedback-6fa2d.firebaseapp.com",
+            databaseURL: "https://feedback-6fa2d-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "feedback-6fa2d",
+            storageBucket: "feedback-6fa2d.firebasestorage.app",
+            messagingSenderId: "1091709526633",
+            appId: "1:1091709526633:web:7244a17e45840c21f338f8",
+            measurementId: "G-LG17NLZMYR"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Submit Feedback to Firebase
+        document.getElementById('feedbackForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const rating = document.querySelector('input[name="rating"]:checked')?.value;
+            const category = document.getElementById("category").value;
+            const likes = [...document.querySelectorAll('input[name="likes"]:checked')].map(cb => cb.value);
+            const comments = document.getElementById("comments").value;
+            const improvements = document.getElementById("improvements").value;
+            const recommend = document.querySelector('input[name="recommend"]:checked')?.value;
+
+            if (!name || !email || !rating || !comments) {
+                alert("Please fill all required fields.");
+                return;
+            }
+
+            const feedbackRef = database.ref("feedbacks").push();
+            feedbackRef.set({
+                id: feedbackRef.key,
+                name: name,
+                email: email,
+                rating: rating,
+                category: category,
+                likes: likes,
+                comments: comments,
+                improvements: improvements,
+                recommend: recommend,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                // Show success modal
+                document.getElementById("successModal").style.display = "block";
+
+                // Reset form after submission
+                document.getElementById("feedbackForm").reset();
+            }).catch(error => {
+                console.error("Error storing feedback: ", error);
+            });
+        });
+
+        // Close modal and redirect when button is clicked
+        document.getElementById("closeModal").addEventListener("click", function () {
+            document.getElementById("successModal").style.display = "none";
+            window.location.href = "index.html"; // Redirect to home page
+        });
+    </script>
+</body>
+
+</html>

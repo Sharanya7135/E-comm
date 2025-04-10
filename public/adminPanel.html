@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="css/adminPanel.css">
+    <link rel="stylesheet" href="css/AdminDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+            <div class="admin-info">
+                <div class="admin-avatar">
+                    <img src="img/logo.jpg" alt="CSI LOGO">
+                </div>
+                <div class="admin-name" id="adminName">Admin</div>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="dashboard.html"><i
+                        class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+            <li class="nav-item active"><a href="adminPanel.html"><i class="fas fa-file-alt"></i><span>Orders</span></a>
+            </li>
+            <li class="nav-item"><a href="admin-manage.html"><i class="fas fa-shopping-cart"></i><span>Manage
+                        Stock</span></a></li>
+            <li class="nav-item"><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+            <li class="nav-item"><a href="review.html"><i class="fas fa-comment-alt"></i><span>Feedback</span></a></li>
+            <li class="nav-item" id="logoutBtn"><a href="AdminLogout.html"><i
+                        class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Admin Panel Content -->
+    <div class="admin-content">
+        <h2>Admin Panel - Orders</h2>
+        <h3>Orders List</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Order ID</th>
+                        <th class="product-header">Products</th>
+                        <th>Total Price</th>
+                        <th>Delivery Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyATcihhtMAJzrk5QnlvjHz4myvODluSkkY",
+            authDomain: "orders-5bef7.firebaseapp.com",
+            databaseURL: "https://orders-5bef7-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "orders-5bef7",
+            storageBucket: "orders-5bef7.firebasestorage.app",
+            messagingSenderId: "112506351374",
+            appId: "1:112506351374:web:805ddf17e9f14df9b1f15f",
+            measurementId: "G-WLLLGSN8SN"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function getProductListHTML(cart) {
+            if (!cart || !Array.isArray(cart) || cart.length === 0) {
+                return "No Items";
+            }
+            let listHTML = `<ul class="product-list">`;
+            cart.forEach(item => {
+                listHTML += `<li title="${item.title} (₹${item.price})">${item.title.substring(0, 20)}... (₹${item.price})</li>`;
+            });
+            listHTML += "</ul>";
+            return listHTML;
+        }
+
+        function loadOrders() {
+            const ordersTable = document.getElementById("ordersTable");
+
+            database.ref("orders").on("value", (snapshot) => {
+                ordersTable.innerHTML = "";
+
+                snapshot.forEach((orderSnapshot) => {
+                    const orderId = orderSnapshot.key;
+                    const order = orderSnapshot.val();
+
+                    let productList = getProductListHTML(order.cart);
+                    let totalPrice = 0;
+
+                    if (order.cart && Array.isArray(order.cart)) {
+                        order.cart.forEach(item => {
+                            totalPrice += parseFloat(item.price) || 0;
+                        });
+                    }
+
+                    let row = `
+                        <tr>
+                            <td>${order.name || "Unknown"}</td>
+                            <td>${order.orderId || orderId}</td>
+                            <td class="product-list">${productList}</td>
+                            <td>₹${totalPrice.toFixed(2)}</td>
+                            <td>${order.status || "Pending"}</td>
+                            <td>
+                                <button class="btn-status" onclick="updateStatus('${orderId}', 'Shipped')">Shipped</button>
+                                <button class="btn-status" onclick="updateStatus('${orderId}', 'Delivered')">Delivered</button>
+                                <button class="btn-delete" onclick="deleteOrder('${orderId}')">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                    ordersTable.innerHTML += row;
+                });
+            });
+        }
+
+        function updateStatus(orderId, newStatus) {
+            database.ref(`orders/${orderId}`).update({
+                status: newStatus
+            }).then(() => {
+                alert(`Order ${orderId} marked as ${newStatus}`);
+            }).catch((error) => {
+                console.error("Error updating order: ", error);
+            });
+        }
+        function deleteOrder(orderId) {
+            if (confirm(`Are you sure you want to delete order ${orderId}?`)) {
+                database.ref(`orders/${orderId}`).remove()
+                    .then(() => {
+                        alert(`Order ${orderId} deleted successfully.`);
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting order: ", error);
+                    });
+            }
+        }
+        window.onload = loadOrders;
+    </script>
+</body>
+
+</html>

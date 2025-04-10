@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Logout</title>
+        <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            background: rgb(219, 201, 235);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: cornflowerblue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: mediumpurple;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .popup button {
+            margin-top: 10px;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="container" id="logoutContainer">
+            <h2>You have been logged out</h2>
+            <p>Click below to go to the home page</p>
+            <button onclick="redirectToHome()">Home</button>
+            <p>Click below to log in again</p>
+            <button onclick="redirectToLogin()">Login</button>
+        </div>
+
+        <!-- Popup for non-logged-in users -->
+        <div class="popup" id="popup">
+            <h3>You are not logged in</h3>
+            <p>Please login or register first.</p>
+            <button onclick="redirectToLogin()">Go to Login/Register</button>
+            <button onClick="redirectToHome()">Home</button>
+        </div>
+
+        <script>
+        function clearSession() {
+            localStorage.removeItem("userSession"); // Remove user session
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'login.html'; // Opens the login/register page
+        }
+
+        function redirectToHome() {
+            window.location.href = 'index.html';
+        }
+        function logout() {
+            authApp.auth().signOut()
+                .then(() => {
+                    console.log("✅ User logged out.");
+                    localStorage.removeItem("userSession");
+                    localStorage.clear();
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 500); // Wait a bit just in case
+                })
+                .catch((error) => {
+                    console.error("Logout error:", error);
+                });
+        }
+
+        function checkLoginStatus() {
+            let userSession = localStorage.getItem("userSession");
+            if (!userSession) {
+                // If no user session, show popup
+                document.getElementById("popup").style.display = "block";
+                document.getElementById("logoutContainer").style.display = "none";
+            } else {
+                // If logged in, log out
+                clearSession();
+            }
+        }
+
+        window.onload = checkLoginStatus;
+    </script>
+    </body>
+
+</html>

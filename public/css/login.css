@@ -1,0 +1,261 @@
+body {
+    font-family: 'Poppins', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.navbar {
+    background-color: #ffffff;
+    padding: 15px 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+}
+
+.navbar i {
+    color: #2c3e50;
+    transition: color 0.3s ease;
+}
+
+.navbar i:hover {
+    color: #3498db;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 70px);
+    padding: 20px;
+}
+
+.box {
+    background: white;
+    padding: 35px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    transition: all 0.3s ease;
+}
+
+.box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.box h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #2c3e50;
+    font-weight: 600;
+    position: relative;
+}
+
+.box h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #3498db;
+    border-radius: 2px;
+}
+
+.box label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #34495e;
+}
+
+.box input {
+    width: 100%;
+    padding: 14px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    background-color: #f8f9fa;
+}
+
+.box input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    background-color: #ffffff;
+}
+
+.box button {
+    width: 100%;
+    padding: 14px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+}
+
+.box button:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 10px rgba(52, 152, 219, 0.3);
+}
+
+.box button:active {
+    transform: translateY(1px);
+}
+
+.box p {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.box p a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.box p a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin: 10px 0 15px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#password-warning, #confirm-warning {
+    color: #e67e22;
+    font-size: 12px;
+    margin-top: -15px;
+    margin-bottom: 15px;
+}
+
+/* Add these new styles for e-commerce feel */
+.brand-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.brand-logo i {
+    font-size: 30px;
+    color: #3498db;
+}
+
+.social-login {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn i {
+    font-size: 18px;
+}
+
+.fa-google {
+    color: #ea4335;
+}
+
+.fa-facebook {
+    color: #3b5998;
+}
+
+.fa-twitter {
+    color: #1da1f2;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.divider span {
+    padding: 0 10px;
+    color: #7f8c8d;
+    font-size: 12px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.remember-me input {
+    width: auto;
+    margin-right: 10px;
+    margin-bottom: 0;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+
+.forgot-password a {
+    color: #7f8c8d;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: #3498db;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .box {
+        width: 100%;
+        padding: 25px;
+    }
+}

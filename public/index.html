@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <!-- AOS CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="js/bot.js"></script>
+  <style>
+    .zoom-hover img {
+      transition: transform 0.7s ease;
+      cursor: pointer;
+    }
+
+    .zoom-hover img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMZNa9JLy1nvuvrVIESOpxQOYUtuNJf10",
+      authDomain: "",
+      projectId: "chatbot-ai-64560",
+      storageBucket: "",
+      messagingSenderId: "710558583006",
+      appId: "1:710558583006:web:38f561c20f5bdfa02f9a4f"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+  </script>
+  <header>
+    <div>
+      <a href="#">CSI</a>
+    </div>
+    <div class="dropdown">
+      <a href="login.html" class="dropbtn">Login</a>
+      <div class="dropdown-content">
+        <a href="Admin.html">Admin Login</a>
+      </div>
+    </div>
+    <a href="index.html">Home</a>
+    <a href="Detail.html">Product Details</a>
+    <a href="RegOffice.html">Registered Office</a>
+    <a href="BranchOff.html">Branch Office</a>
+    <a href="Cart.html"><i class="fas fa-shopping-cart shopping-cart"></i></a>
+    <div class="dropdown">
+      <div class="dropbtn"><i class="fas fa-ellipsis-v"></i></div>
+      <div class="dropdown-content">
+        <a href="chatbot.html">Chatbot Help</a>
+        <a href="FAQ.html">Help</a>
+        <a href="logout.html">Logout</a>
+      </div>
+    </div>
+  </header>
+  <div class="main-content">
+    <div class="marquee-container">
+      <h1 class="marquee-text">
+        Welcome to COMPUTER <span class="highlight">SOLUTIONS</span> INDIA PRIVATE LIMITED
+      </h1>
+    </div>
+
+    <div id="myCarousel" class="carousel slide mb-6 my-2" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"
+          aria-current="true"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3" aria-label="Slide 4" class=""></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="carousel-image-container">
+            <img src="img/gaming.jpg" alt="Latest Gaming Laptop" class="carousel-img" />
+          </div>
+          <div class="container">
+            <div class="carousel-caption text-start">
+              <h1>New Gaming Laptops</h1>
+              <p class="opacity-75">
+                Unleash Your Gaming Potential with Next-Gen Performance
+              </p>
+              <p>
+                <a class="btn btn-lg btn-primary" href="Detail.html">Shop Now</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-image-container">
+            <img src="img/keyboard.jpg" alt="Mechanical Keyboard" class="carousel-img" />
+          </div>
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Mechanical Keyboards</h1>
+              <p>
+                Precision Typing and Tactile Feedback for Professional and Gaming Setups
+              </p>
+              <p><a class="btn btn-lg btn-primary" href="Detail.html">Explore Collection</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-image-container">
+            <img src="img/graphic-card.jpg" alt="Graphics Cards" class="carousel-img" />
+          </div>
+          <div class="container">
+            <div class="carousel-caption text-end">
+              <h1>Premium Graphics Cards</h1>
+              <p>
+                Experience Ray Tracing and AI-Enhanced Graphics for Your Ultimate Build
+              </p>
+              <p>
+                <a class="btn btn-lg btn-primary" href="Detail.html">View More</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-image-container">
+            <img src="img/setup-pc.jpg" alt="Personal Computer" class="carousel-img" />
+          </div>
+          <div class="container">
+            <div class="carousel-caption text-end">
+              <h1>Monitors</h1>
+              <p>
+                Elevate Your Visual Experience with Stunning Clarity and Color Accuracy
+              </p>
+              <p>
+                <a class="btn btn-lg btn-primary" href="Detail.html">View More</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <div class="container">
+      <h1>Welcome to our newly launched website</h1>
+      <p>Established on <strong>September 9, 2002</strong>, <strong>Computer <span class="highlight">Solutions</span>
+          Ind Pvt. Ltd.</strong> has been a trusted name in the industry for
+        over two decades. From its inception, the company has been committed to excellence, growing steadily to
+        become a <strong>privately registered (ROC) limited company</strong> on the same founding date.</p>
+    </div>
+    <!-- Gallery Section -->
+    <div class="container my-5">
+      <h2 class="mb-4 text-center" data-aos="fade-up">Our Office Space</h2>
+      <div class="row g-4">
+        <div class="col-md-4 zoom-hover" data-aos="zoom-in" data-aos-delay="100">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#lightboxModal" data-img="img/of3.jpeg">
+            <img src="img/of3.jpeg" class="img-fluid rounded shadow-sm" alt="Office View 1">
+          </a>
+        </div>
+        <div class="col-md-4 zoom-hover" data-aos="zoom-in" data-aos-delay="200">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#lightboxModal" data-img="img/of2.jpeg">
+            <img src="img/of2.jpeg" class="img-fluid rounded shadow-sm" alt="Office View 2">
+          </a>
+        </div>
+        <div class="col-md-4 zoom-hover" data-aos="zoom-in" data-aos-delay="300">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#lightboxModal" data-img="img/of4.jpeg">
+            <img src="img/of4.jpeg" class="img-fluid rounded shadow-sm" alt="Office View 3">
+          </a>
+        </div>
+        <div class="col-md-4 zoom-hover" data-aos="zoom-in" data-aos-delay="400">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#lightboxModal" data-img="img/of1.jpeg">
+            <img src="img/of1.jpeg" class="img-fluid rounded shadow-sm" alt="Office View 4">
+          </a>
+        </div>
+        <div class="col-md-4 zoom-hover" data-aos="zoom-in" data-aos-delay="500">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#lightboxModal" data-img="img/of5.jpg">
+            <img src="img/of5.jpg" class="img-fluid rounded shadow-sm" alt="Office View 5">
+          </a>
+        </div>
+        <div class="col-md-4 zoom-hover" data-aos="zoom-in" data-aos-delay="600">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#lightboxModal" data-img="img/of6.jpeg">
+            <img src="img/of6.jpeg" class="img-fluid rounded shadow-sm" alt="Office View 6">
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- Lightbox Modal -->
+    <div class="modal fade" id="lightboxModal" tabindex="-1" aria-labelledby="lightboxModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+          <div class="modal-body p-0">
+            <img id="lightboxImage" src="" class="img-fluid rounded w-100" alt="Full View">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Cyberpunk Chatbot Toggle -->
+    <div id="chatbot" onclick="redirectToChatbot()">
+      <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <script>
+      function redirectToChatbot() {
+        window.location.href = "chatbot.html";
+      }
+    </script>
+
+    <!-- Chatbot Popup -->
+    <div id="chat-container">
+      <div id="chat-box">Welcome to CyberBot!</div>
+      <div id="input-container">
+        <input type="text" placeholder="Type your message...">
+        <button>Send</button>
+      </div>
+    </div>
+
+    <script>
+      function toggleChatbot() {
+        var chatContainer = document.getElementById("chat-container");
+        if (chatContainer.style.display === "none" || chatContainer.style.display === "") {
+          chatContainer.style.display = "block";
+        } else {
+          chatContainer.style.display = "none";
+        }
+      }
+    </script>
+  </div>
+  <script>
+    /* global bootstrap: false */
+    (() => {
+      'use strict'
+      const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+      tooltipTriggerList.forEach(tooltipTriggerEl => {
+        new bootstrap.Tooltip(tooltipTriggerEl)
+      })
+    })()
+
+  </script>
+
+
+<footer>
+  <div class="footer-container">
+      <!-- Footer Top -->
+      <div class="footer-links">
+          <!-- Get to Know Us -->
+          <div class="footer-section">
+              <h3>Get to Know Us</h3>
+              <a href="AboutUs.html">About Us</a><br>
+              <a href="PaymentPolicy.html">Payment</a><br>
+              <a href="AD.html">Authorized Dealers</a><br>
+              <a href="Team.html">Team</a>
+          </div>
+
+          <!-- Make Money with Us -->
+          <div class="footer-section">
+              <h3>Make Money with Us</h3>
+              <a href="Vendor.html">Vendor Registration</a><br>
+              <a href="collab.html">Collaboration </a><br>
+              <a href="Franchise.html">Franchise</a><br>
+              <a href="Advertise.html">Advertise With Us</a>
+          </div>
+
+          <!-- Customer Service -->
+          <div class="footer-section">
+              <h3>Customer Service</h3>
+              <a href="Contact.html">Help Center</a><br>
+              <a href="FAQ.html">Returns & Refunds</a><br>
+              <a href="feedback.html">Feedback</a><br>
+              <a href="Searchtrack.html">Order Tracking</a><br>
+          </div>
+
+          <!-- Connect with Us -->
+          <div class="footer-section">
+              <h3>Connect with Us</h3>
+              <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+                  <i class="fab fa-twitter"></i> Twitter
+              </a><br>
+              <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i> Instagram
+              </a><br>
+              <a href="mailto:csi@csimumbai.com" aria-label="Email">
+                  <i class="fas fa-envelope"></i> Email
+              </a>
+          </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom" style="color:blue">
+          <p>&copy; 2023 Computer Solutions Ind. Pvt. Ltd. All rights reserved.</p>
+      </div>
+  </div>
+</footer>
+  <!-- AOS JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init();
+    const lightboxModal = document.getElementById('lightboxModal');
+    lightboxModal.addEventListener('show.bs.modal', function (event) {
+      const trigger = event.relatedTarget;
+      const imgSrc = trigger.getAttribute('data-img');
+      const modalImg = document.getElementById('lightboxImage');
+      modalImg.src = imgSrc;
+    });
+  </script>
+
+</body>
+
+</html>

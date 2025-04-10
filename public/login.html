@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login and Register</title>
+        <link rel="stylesheet" href="css/login.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    </head>
+
+    <body>
+        <div class="navbar">
+            <i class="fa-solid fa-arrow-left" onclick="goBack()"
+                style="font-size: 24px; cursor: pointer;"></i>
+        </div>
+
+        <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        if (!localStorage.getItem("userSession") && window.location.pathname !== "/login.html") {
+            window.location.href = "login.html";
+        }
+
+    </script>
+
+        <div class="container">
+            <div class="box login-box">
+                <h2>Login Page</h2>
+                <label for="login-email">Email</label>
+                <input id="login-email" type="email"
+                    placeholder="Enter your email">
+
+                <label for="login-password">Password</label>
+                <input id="login-password" type="password"
+                    placeholder="Enter your password">
+
+                <button id="login-btn">Login</button>
+                <div class="error-message" id="login-error"></div>
+
+                <p>New user? <a href="#" id="register-link">Register
+                        here</a></p>
+            </div>
+
+            <div class="box register-box" style="display: none;">
+                <h2>Register Page</h2>
+                <label for="register-email">Email</label>
+                <input id="register-email" type="email"
+                    placeholder="Enter email">
+
+                <label for="register-password">Password</label>
+                <input id="register-password" type="password"
+                    placeholder="Enter a strong password">
+                <p id="password-warning"
+                    style="color: red; font-size: 12px;"></p>
+
+                <button id="register-btn">Register</button>
+                <div class="error-message" id="register-error"></div>
+
+                <p>Already have an account? <a href="#"
+                        id="login-link">Login</a></p>
+            </div>
+        </div>
+
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script
+            src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script>
+        const authFirebaseConfig = {
+            apiKey: "AIzaSyALS-1EI3vC3_e3BfdfbfQR2rT_H-RQUVg",
+            authDomain: "ecommerce-website-ff296.firebaseapp.com",
+            projectId: "ecommerce-website-ff296",
+            storageBucket: "ecommerce-website-ff296.firebasestorage.app",
+            messagingSenderId: "215343343164",
+            appId: "1:215343343164:web:cb3ca6d36c4336e8280539",
+            measurementId: "G-9PH1X13P98"
+        };
+
+        const app = firebase.initializeApp(authFirebaseConfig);
+        const auth = firebase.auth();
+        const db = app.firestore();
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set Persistence to Local
+            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                .then(() => {
+                    console.log("✅ Auth persistence set to LOCAL");
+                })
+                .catch((error) => {
+                    console.error("❌ Persistence error:", error.message);
+                });
+
+            // Check if user is already logged in
+            auth.onAuthStateChanged(async (user) => {  // Make this callback async
+                if (user) {
+                    console.log("✅User is already logged in:", user.email);
+                    email.value = user.email;
+                    const userRef = db.collection("users").doc(user.uid);
+                    const docSnap = await userRef.get(); // Now await is valid
+                    // Fetch user details from Firestore
+                    db.collection("users").doc(user.uid).get()
+                        .then((doc) => {
+                            if (doc.exists()) {
+                                const userData = doc.data();
+                                localStorage.setItem("userSession", JSON.stringify({                                    
+                                    userId: user.uid,
+                                    email: userData.email,
+                                }));
+                                console.log(localStorage.getItem("userSession"));
+                                window.location.href = "Detail.html";
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching user data:", error);
+                        });
+                } else {
+                    console.log("No user is logged in.");
+                }
+            });
+        });
+
+        document.getElementById("register-link").addEventListener("click", function (event) {
+            event.preventDefault();
+            document.querySelector(".login-box").style.display = "none";
+            document.querySelector(".register-box").style.display = "block";
+        });
+
+        document.getElementById("login-link").addEventListener("click", function (event) {
+            event.preventDefault();
+            document.querySelector(".register-box").style.display = "none";
+            document.querySelector(".login-box").style.display = "block";
+        });
+
+        document.getElementById("login-btn").addEventListener("click", async function () {
+            const email = document.getElementById("login-email").value.trim();
+            const password = document.getElementById("login-password").value.trim();
+            const errorMsg = document.getElementById("login-error");
+
+            if (!email || !password) {
+                errorMsg.textContent = "❌ Email & password required!";
+                return;
+            }
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Fetch user details from Firestore
+                    db.collection("users").doc(user.uid).get()
+                        .then((doc) => {
+                            if (doc.exists) {
+                                const userData = doc.data();
+                                localStorage.setItem("userSession", JSON.stringify({
+                                    userId: user.uid,
+                                    email: userData.email,
+                                }));
+                                alert(`🎉 Welcome back, ${user.email}!`);
+                                window.location.href = "Detail.html";
+                            } else {
+                                errorMsg.textContent = "❌ User data not found!";
+                            }
+                        });
+                })
+                .catch((error) => {
+                    errorMsg.textContent = `❌ ${error.message}`;
+                });
+        });
+        //Password validation during registration
+        document.getElementById("register-password").addEventListener("input", function () {
+            const password = this.value;
+            const warning = document.getElementById("password-warning");
+            if (password.length < 6) {
+                warning.textContent = "⚠ Password must be at least 6 characters!";
+            } else {
+                warning.textContent = "";
+            }
+        });
+
+        document.getElementById("register-btn").addEventListener("click", function () {
+            const email = document.getElementById("register-email").value.trim();
+            const password = document.getElementById("register-password").value.trim();
+            const errorMsg = document.getElementById("register-error");
+
+            if (!email || !password) {
+                errorMsg.textContent = "❌ Email & password are required!";
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Save additional user details in Firestore
+                    return db.collection("users").doc(user.uid).set({
+                        email: email,
+                        username: email.split("@")[0], // Default username from email
+                        profilePic: "https://avatar.iran.liara.run/public/93",
+                        theme: "light",
+                    }).then(() => {
+                        alert("🎉 Registration successful! You can now log in.");
+                        document.querySelector(".register-box").style.display = "none";
+                        document.querySelector(".login-box").style.display = "block";
+                    });
+                })
+                .catch((error) => {
+                    errorMsg.textContent = `❌ ${error.message}`;
+                });
+        });
+
+        function logout() {
+            auth.signOut()
+                .then(() => {
+                    localStorage.removeItem("userSession");
+                    alert("🚪 Logged out successfully!");
+                    window.location.href = "login.html";
+                })
+                .catch((error) => {
+                    console.error("Logout Error: ", error);
+                });
+        }
+    </script>
+    </body>
+
+</html>

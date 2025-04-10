@@ -1,0 +1,276 @@
+/* Soft Color Palette */
+:root {
+    --primary-color: #6c9bcf;
+    --secondary-color: #a6c8e4;
+    --accent-color: #f0f7ff;
+    --text-color: #4a5568;
+    --light-text: #718096;
+    --heading-color: #2d3748;
+    --background: #ffffff;
+    --footer-bg: #f7fafc;
+    --hover-color: #5a89b8;
+    --shadow: rgba(0, 0, 0, 0.05);
+}
+
+/* Global Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+    background-color: var(--background);
+    text-align: left;
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem 5%;
+    background-color: var(--background);
+    box-shadow: 0 2px 10px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header div a, header > a {
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    margin: 0 0.3rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+header div:first-child a {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-right: auto;
+}
+
+header a:hover {
+    color: var(--hover-color);
+    background-color: var(--accent-color);
+}
+
+/* Dropdown Styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    color: var(--text-color);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    min-width: 160px;
+    box-shadow: 0 8px 16px var(--shadow);
+    border-radius: 8px;
+    background-color: var(--background);
+    padding: 0.5rem 0;
+    z-index: 1;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 0.7rem 1rem;
+    text-align: left;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--accent-color);
+    color: var(--hover-color);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Main Content Styling */
+.main-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--background);
+    box-shadow: 0 4px 12px var(--shadow);
+    border-radius: 12px;
+}
+
+.page {
+    padding: 1rem;
+    text-align: left;
+}
+
+/* Typography */
+h1, h2, h3 {
+    color: var(--heading-color);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+h1:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 60px;
+    background-color: var(--secondary-color);
+    border-radius: 2px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+}
+
+p {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+strong {
+    color: var(--heading-color);
+}
+
+ul {
+    margin-left: 2rem;
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+em {
+    color: var(--primary-color);
+}
+
+/* Footer Styling */
+footer {
+    background-color: var(--footer-bg);
+    padding: 3rem 5% 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 1.5rem;
+    padding-right: 2rem;
+    text-align: left;
+}
+
+.footer-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--heading-color);
+}
+
+.footer-section a {
+    display: inline-block;
+    color: var(--light-text);
+    text-decoration: none;
+    margin-bottom: 0.7rem;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: var(--primary-color);
+}
+
+.footer-bottom {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 0.9rem;
+    color: var(--primary-color) !important;
+    text-align: left;
+}
+
+/* Icons */
+.fas, .fab {
+    margin-right: 0.4rem;
+}
+
+/* Shopping Cart Icon */
+header a i.fa-shopping-cart {
+    font-size: 1.2rem;
+}
+
+/* Fix for ellipsis menu */
+header .dropdown:last-child {
+    margin-left: auto;
+}
+
+header .dropdown:last-child .dropbtn {
+    font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    
+    header div:first-child {
+        flex-basis: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+    }
+    
+    .footer-section {
+        padding-right: 0;
+    }
+    
+    .main-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .footer-bottom {
+        text-align: left;
+    }
+}

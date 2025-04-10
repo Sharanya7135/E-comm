@@ -1,0 +1,150 @@
+/* Sidebar Styles */
+.sidebar {
+    background-color: rgb(255, 255, 255);
+    color: black;
+    width: 250px;
+    height: 100vh;
+    transition: all 0.3s;
+    overflow-x: hidden;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar-header { 
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #347dc6;
+}
+
+.sidebar-header h3 {
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebar-header h3 {
+    opacity: 0;
+    width: 0;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: black;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.sidebar.collapsed .toggle-btn {
+    transform: rotate(180deg);
+}
+
+.sidebar-menu {
+    padding: 10px 0;
+}
+
+.menu-item {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.menu-item:hover {
+    background-color: #3498db;
+}
+
+.menu-item.active {
+    background-color: #3498db;
+}
+
+.menu-item i {
+    margin-right: 15px;
+    font-size: 18px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.sidebar.collapsed .menu-item span {
+    opacity: 0;
+    width: 0;
+    display: none;
+}
+
+/* Adjust main content to make room for sidebar */
+body {
+    padding-left: 250px;
+    transition: padding-left 0.3s;
+}
+
+body.sidebar-collapsed {
+    padding-left: 70px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        left: -250px;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+    
+    .sidebar.collapsed {
+        left: -70px;
+    }
+    
+    .sidebar.collapsed.show {
+        left: 0;
+    }
+    
+    body {
+        padding-left: 0;
+    }
+}
+/* Added styles for profile picture and user info */
+.profile-container {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid black;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-weight: bold;
+    color: black;
+  }
+  
+  .user-email {
+    font-size: 0.8em;
+    color: black;
+    word-break: break-word;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+}

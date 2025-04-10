@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="css/Cart.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        #loading {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .login-popup {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <i class="fa-solid fa-arrow-left" onclick="goBack()"
+            style="font-size: 24px; cursor: pointer;"></i>
+    </div>
+
+    <div id="loading">Loading your cart...</div>
+
+    <div class="cart-container" style="display:none;">
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <button>🔍</button>
+        </div>
+        <table class="cart-table" border="1px">
+            <tr style="background-color:#9875ea;">
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price (₹)</th>
+                <th>Actions</th>
+            </tr>
+            <tbody id="cart-items"></tbody>
+        </table>
+        <div class="total-price">Total: ₹<span id="total-price">0</span></div>
+        <button class="proceed-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+    </div>
+
+    <div class="login-popup" id="loginPopup">
+        <p>You must log in to proceed!</p>
+        <button onclick="redirectToLogin()">Login</button>
+        <button onclick="checkLoginAndProceed()">Close</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        const authFirebaseConfig = {
+            apiKey: "AIzaSyALS-1EI3vC3_e3BfdfbfQR2rT_H-RQUVg",
+            authDomain: "ecommerce-website-ff296.firebaseapp.com",
+            projectId: "ecommerce-website-ff296",
+            storageBucket: "ecommerce-website-ff296.firebasestorage.app",
+            messagingSenderId: "215343343164",
+            appId: "1:215343343164:web:cb3ca6d36c4336e8280539",
+            measurementId: "G-9PH1X13P98"
+        };
+
+        const app = firebase.initializeApp(authFirebaseConfig);
+        const auth = firebase.auth();
+        const db = app.firestore();
+
+        // Copy this for all files with auth.onAuthStateChanged function
+        // should right after const db = app.firestore(); declaration
+        document.addEventListener("DOMContentLoaded", () => {
+            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                .then(() => {
+                    console.log("✅ Auth persistence set to LOCAL");
+                })
+                .catch((error) => {
+                    console.error("❌ Persistence error:", error.message);
+                });
+
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    console.log("✅ User is authenticated:", user.email);
+
+                    db.collection("users").doc(user.uid).get()
+                        .then((doc) => {
+                            if (doc.exists) {
+                                const userData = doc.data();
+                                sessionStorage.setItem("userSession", JSON.stringify({
+                                    userId: user.uid,
+                                    email: userData.email,
+                                }));
+                                console.log("✅ Session rehydrated");
+
+                                // Show the cart and hide loading
+                                document.getElementById("loading").style.display = "none";
+                                document.querySelector(".cart-container").style.display = "block";
+
+                                displayCart();
+                            } else {
+                                console.log("⚠️ User document not found");
+                                redirectToLogin();
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("🔥 Error fetching user:", error);
+                            redirectToLogin();
+                        });
+                } else {
+                    console.log("❌ No user found. Redirecting to login...");
+                    redirectToLogin();
+                }
+            });
+        });
+        // till here
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function proceedToCheckout() {
+            if (sessionStorage.getItem('userSession')) {
+                window.location.href = 'orderSummary.html';
+            } else {
+                document.getElementById('loginPopup').style.display = 'block';
+            }
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function checkLoginAndProceed() {
+            document.getElementById('loginPopup').style.display = 'none';
+        }
+
+        function displayCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cartItems = document.getElementById('cart-items');
+            let totalPrice = 0;
+
+            cartItems.innerHTML = '';
+
+            cart.forEach(item => {
+                if (!item.id) {
+                    item.id = generateRandomId();
+                }
+
+                let row = cartItems.insertRow();
+
+                let nameCell = row.insertCell(0);
+                nameCell.textContent = item.title;
+
+                let quantityCell = row.insertCell(1);
+                quantityCell.textContent = item.quantity;
+
+                let priceCell = row.insertCell(2);
+                priceCell.textContent = (item.price * item.quantity).toFixed(2);
+
+                let actionCell = row.insertCell(3);
+                actionCell.innerHTML = `
+                    <button class="quantity-btn" onclick="decreaseQuantity('${item.id}')">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="quantity-btn" onclick="increaseQuantity('${item.id}')">+</button>
+                    <button class="remove-btn" onclick="removeItem('${item.id}')">Remove</button>
+                `;
+
+                totalPrice += item.price * item.quantity;
+            });
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+        }
+
+        function generateRandomId() {
+            return 'id-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function increaseQuantity(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let item = cart.find(item => String(item.id) === String(itemId));
+
+            if (item) {
+                item.quantity++;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                displayCart();
+            }
+        }
+
+        function decreaseQuantity(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let item = cart.find(item => String(item.id) === String(itemId));
+
+            if (item && item.quantity > 1) {
+                item.quantity--;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                displayCart();
+            }
+        }
+
+        function removeItem(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => String(item.id) !== String(itemId));
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+    </script>
+</body>
+
+</html>

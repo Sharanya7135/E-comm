@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/About.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        .team-member {
+            display: flex;
+            justify-content: center;
+            /* Centers items horizontally */
+            gap: 40px;
+            /* Space between members */
+            margin-top: 20px;
+        }
+
+        /* Individual member card styling */
+        .member {
+            text-align: center;
+            width: 200px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .img-container {
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .member img {
+            width: 120px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .zoomed {
+            transform: scale(2.2);
+            z-index: 10;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Blur background (other members dim) */
+        .blurred .member:not(.zoomed-parent) {
+            filter: blur(3px);
+            pointer-events: none;
+        }
+
+        /* Close button */
+        .close-btn {
+            display: none;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 20px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            line-height: 24px;
+            cursor: pointer;
+            z-index: 11;
+        }
+
+        .img-container.zoomed-container .close-btn {
+            display: block;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <!-- Sidebar Component -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Dashboard</h3>
+                <button class="toggle-btn" id="toggleBtn">☰</button>
+            </div>
+            <div class="profile-container">
+                <img src="https://avatar.iran.liara.run/public/93" alt="Profile Picture" class="profile-picture"
+                    id="profilePicture">
+                <div class="user-info">
+                    <span class="user-name" id="welcomeMessage">Welcome, Guest</span>
+                    <span class="user-email" id="userEmail"></span>
+                </div>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" onclick="redirectTo('Detail')">
+                    <i>📊</i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item" onclick="redirectTo('profile')">
+                    <i>👤</i>
+                    <span>Profile</span>
+                </div>
+                <div class="menu-item" onclick="redirectTo('Cart')">
+                    <i>🛒</i>
+                    <span>Cart</span>
+                </div>
+                <div class="menu-item" onclick="redirectTo('feedback')">
+                    <i>📝</i>
+                    <span>Feedback</span>
+                </div>
+                <div class="menu-item" onclick="redirectTo('FAQ')">
+                    <i>❓</i>
+                    <span>Help</span>
+                </div>
+                <div class="menu-item" onclick="redirectTo('chatbot')">
+                    <i>🤖</i>
+                    <span>Chatbot</span>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div><a>CSI</a></div>
+        <div class="dropdown">
+            <a href="login.html" class="dropbtn">Login</a>
+            <div class="dropdown-content">
+                <a href="Admin.html">Admin Login</a>
+            </div>
+        </div>
+        <a href="index.html">Home</a>
+        <a href="Detail.html">Product Details</a>
+        <a href="RegOffice.html">Registered Office</a>
+        <a href="BranchOff.html">Branch Office</a>
+        <a href="Cart.html"><i class="fas fa-shopping-cart"></i></a>
+        <div class="dropdown">
+            <div class="dropbtn"><i class="fas fa-ellipsis-v"></i></div>
+            <div class="dropdown-content">
+                <a href="chatbot.html">Chatbot Help</a>
+                <a href="FAQ.html">Help</a>
+                <a href="logout.html">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Welcome to our newly launched website</h1>
+        <p>Established on <strong>September 9, 2002</strong>, <strong>Computer <span class="highlight">Solutions</span>
+                Ind Pvt. Ltd.</strong> has been a trusted name in the industry for
+            over two decades. From its inception, the company has been committed to excellence, growing steadily to
+            become a <strong>privately registered (ROC) limited company</strong> on the same founding date.</p>
+        <h2>Our Leadership</h2>
+        <p>At the helm of our company are two visionary directors who have guided us through an incredible journey of
+            innovation and success. Their expertise and leadership continue to drive our mission forward.</p>
+
+        <h2>Our Team</h2>
+        <p>With a strong workforce of <strong>20+ highly qualified professionals</strong> and employees boasting
+            <strong>30+ years of industry experience</strong>, we pride ourselves on delivering exceptional services and
+            solutions.
+        </p>
+
+        <h2>Our Presence</h2>
+        <p>Headquartered in <strong>Mumbai</strong>, we have expanded our reach with branches in <strong>Bangalore,
+                Mangalore, and Hyderabad</strong>, ensuring a robust network to serve our clients efficiently across
+            multiple locations.</p>
+
+        <h2>We Are Authorized Dealers For:</h2>
+        <p>We take pride in being authorized dealers for a range of high-quality products from leading brands:</p>
+        <ul>
+            <li>HP Laser Printers, HP Deskjet Printers, HP Scanners, HP Consumables</li>
+            <li>Epson Dot Matrix Printers</li>
+            <li>Cisco & Linksys Products</li>
+            <li>Seagate Products (Internal & External Hard Disks)</li>
+            <li>Samsung Monitors, Hard Disks & DVD Writers</li>
+            <li>Lipi Products</li>
+            <li>Intel Products</li>
+            <li>Kingston Products</li>
+            <li>Dell Products</li>
+            <li>Lenovo Laptops, Desktops & Accessories</li>
+            <li>Western Digital SSD & NAS Box</li>
+        </ul>
+
+        <h2>Authorized Service Center</h2>
+        <p>As a policy, <strong>Computer <span class="highlight">Solutions</span></strong> (I) Pvt. Ltd. has always
+            emphasized providing strong after-sales support and
+            service to its clients.</p>
+
+        <h2>Service Centre Activities</h2>
+        <p><strong>Computer <span class="highlight">Solutions</span></strong> (I) Pvt. Ltd. is the authorized service
+            center for the entire range of HP Deskjet,
+            LaserJet Printers, and computer hardware.</p>
+
+        <h2>Service Centre Offers:</h2>
+        <ul>
+            <li>Repairs and servicing of printers under warranty</li>
+            <li>Post-warranty repairs of printers on a chargeable basis</li>
+            <li>Annual Maintenance Contracts (AMC) for printers</li>
+            <li>Annual Maintenance Contracts (AMC) for computer systems</li>
+        </ul>
+
+        <p>We offer a special <b>ON-SITE warranty</b> ranging from 1 to 3 years on these products. Our dedicated team of
+            highly qualified and experienced engineers ensures efficient services.</p>
+
+        <p>We proudly serve over <b>1000 reputed clients</b> across India, including multinational corporations, private
+            sector firms, government organizations, and large businesses. Additionally, we cater to more than <b>10,000
+                individual customers</b>with our top-notch services.</p>
+
+        <p><em>Explore our website to learn more about our services and expertise.</em></p>
+        <h2>Leadership & Team</h2>
+        <p><strong>Directed by:</strong></p>
+        <div class="team-member">
+            <div class="member">
+                <div class="img-container">
+                    <img src="img/img1.jpeg" alt="Rajesh Kumar Thantry" onclick="toggleZoom(this)">
+                    <span class="close-btn" onclick="closeZoom(event)">&times;</span>
+                </div>
+                <p>Rajesh Kumar Thantry</p>
+                <p>CMD</p>
+            </div>
+
+            <div class="member">
+                <div class="img-container">
+                    <img src="img/img2.jpeg" alt="Clarence Sequeira" onclick="toggleZoom(this)">
+                    <span class="close-btn" onclick="closeZoom(event)">&times;</span>
+                </div>
+                <p>Clarence Sequeira</p>
+                <p>Director</p>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/si.js">
+    </script>
+    <script>
+        function toggleZoom(img) {
+            const allImages = document.querySelectorAll('.member img');
+            const body = document.querySelector('.team-member');
+
+            // Remove zoom from others
+            allImages.forEach(i => {
+                i.classList.remove('zoomed');
+                i.closest('.img-container').classList.remove('zoomed-container');
+                i.closest('.member').classList.remove('zoomed-parent');
+            });
+            body.classList.remove('blurred');
+
+            // Toggle zoom on clicked
+            const isZoomed = img.classList.contains('zoomed');
+            if (!isZoomed) {
+                img.classList.add('zoomed');
+                img.closest('.img-container').classList.add('zoomed-container');
+                img.closest('.member').classList.add('zoomed-parent');
+                body.classList.add('blurred');
+            }
+        }
+
+        function closeZoom(event) {
+            event.stopPropagation(); // prevent the image click from triggering
+            const body = document.querySelector('.team-member');
+            const container = event.target.closest('.img-container');
+            const img = container.querySelector('img');
+
+            img.classList.remove('zoomed');
+            container.classList.remove('zoomed-container');
+            container.closest('.member').classList.remove('zoomed-parent');
+            body.classList.remove('blurred');
+        }
+    </script>
+
+
+    <footer>
+        <div class="footer-container">
+            <!-- Footer Top -->
+            <div class="footer-links">
+                <!-- Get to Know Us -->
+                <div class="footer-section">
+                    <h3>Get to Know Us</h3>
+                    <a href="AboutUs.html">About Us</a><br>
+                    <a href="PaymentPolicy.html">Payment</a><br>
+                    <a href="AD.html">Authorized Dealers</a><br>
+                    <a href="Team.html">Team</a>
+                </div>
+
+                <!-- Make Money with Us -->
+                <div class="footer-section">
+                    <h3>Make Money with Us</h3>
+                    <a href="Vendor.html">Vendor Registration</a><br>
+                    <a href="collab.html">Collaboration </a><br>
+                    <a href="Franchise.html">Franchise</a><br>
+                    <a href="Advertise.html">Advertise With Us</a>
+                </div>
+
+                <!-- Customer Service -->
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <a href="Contact.html">Help Center</a><br>
+                    <a href="FAQ.html">Returns & Refunds</a><br>
+                    <a href="feedback.html">Feedback</a><br>
+                    <a href="Searchtrack.html">Order Tracking</a><br>
+                </div>
+
+                <!-- Connect with Us -->
+                <div class="footer-section">
+                    <h3>Connect with Us</h3>
+                    <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a><br>
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a><br>
+                    <a href="mailto:csi@csimumbai.com" aria-label="Email">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom" style="color:blue">
+                <p>&copy; 2023 Computer Solutions Ind. Pvt. Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

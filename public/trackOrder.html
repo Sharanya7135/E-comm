@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order</title>
+    <link rel="stylesheet" href="css/track.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="tracking-container">
+        <div class="header">
+            <h1>Track Your Order</h1>
+            <div class="order-id-container">
+                <span class="order-id-label">Order ID:</span>
+                <span class="order-id" id="orderIdDisplay"></span>
+            </div>
+        </div>
+
+        <div class="status-header">
+            <div class="status-card">
+                <span class="status-label">Current Status</span>
+                <div class="status-value">
+                    <span class="status-badge" id="orderStatus">Loading...</span>
+                </div>
+            </div>
+            <div class="status-card">
+                <span class="status-label">Estimated Delivery</span>
+                <div class="status-value" id="deliveryDate">Loading...</div>
+            </div>
+            <div class="status-card">
+                <span class="status-label">Shipping Method</span>
+                <div class="status-value" id="shippingMethod">Loading...</div>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+            <h2 class="timeline-title">Order Timeline</h2>
+            <div class="timeline" id="statusTimeline">
+                <!-- Timeline items will be added here by JavaScript -->
+            </div>
+        </div>
+
+        <a href="index.html" class="back-button">Return to Home</a>
+        <a href="feedback.html" class="back-button">Give Feedback</a>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // Function to get query parameter from URL
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        const orderId = getQueryParam("orderId") || localStorage.getItem("orderId") || "Unknown";
+        document.getElementById("orderIdDisplay").textContent = orderId;
+
+        // Function to create a timeline item
+        function createTimelineItem(step, date, status) {
+            const timelineItem = document.createElement("div");
+            timelineItem.className = `timeline-item ${status}`;
+
+            timelineItem.innerHTML = `
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-step">${step}</div>
+                    <div class="timeline-date">${date}</div>
+                </div>
+            `;
+
+            return timelineItem;
+        }
+
+        // Function to simulate fetching order status from a server
+        function fetchOrderStatus(orderId) {
+            // Simulated order data
+            const now = new Date(); // Current timestamp
+
+            // Format date as "14 Mar 2025, 1:11 AM"
+            const formatDate = (date) => {
+                return date.toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            };
+
+            // Calculate future/past dates relative to now
+            const orderPlaced = new Date(now);
+            const paymentConfirmed = new Date(now);
+            const orderProcessed = new Date(now.getTime() + 225 * 60000); // +3h45m
+            const orderShipped = new Date(now.getTime() + 435 * 60000); // +7h15m
+
+            // For pending steps
+            const expectedDate = new Date(now);
+            expectedDate.setDate(expectedDate.getDate() + 1); // Tomorrow
+
+            const orderData = {
+                [orderId]: {
+                    status: "Shipped",
+                    shippingMethod: "Express Delivery",
+                    location: "Mumbai",
+                    destination: "Delhi",
+                    distance: 1400, // distance in km
+                    updates: [
+                        { step: "Order Placed", date: formatDate(orderPlaced), status: "completed" },
+                        { step: "Payment Confirmed", date: formatDate(paymentConfirmed), status: "completed" },
+                        { step: "Order Processed", date: formatDate(orderProcessed), status: "completed" },
+                        { step: "Order Shipped", date: formatDate(orderShipped), status: "completed" },
+                        {
+                            step: "Out for Delivery",
+                            date: `Expected by ${expectedDate.getDate()} ${getMonthName(expectedDate.getMonth())} ${expectedDate.getFullYear()}`,
+                            status: "pending"
+                        },
+                        {
+                            step: "Delivered",
+                            date: `Expected by ${expectedDate.getDate()} ${getMonthName(expectedDate.getMonth())} ${expectedDate.getFullYear()}`,
+                            status: "pending"
+                        }
+                    ]
+                }
+            };
+
+            // Simulate a delay (replace with your actual API call)
+            setTimeout(() => {
+                if (orderData[orderId]) {
+                    const data = orderData[orderId];
+                    const statusBadge = document.getElementById("orderStatus");
+                    statusBadge.textContent = data.status;
+
+                    // Set badge color based on status
+                    if (data.status === "Delivered") {
+                        statusBadge.style.backgroundColor = "#28a745";  // Green
+                    } else if (data.status === "Shipped") {
+                        statusBadge.style.backgroundColor = "#007bff";  // Blue
+                    } else if (data.status === "Processing") {
+                        statusBadge.style.backgroundColor = "#ffc107";  // Yellow
+                    } else if (data.status === "Cancelled") {
+                        statusBadge.style.backgroundColor = "#dc3545";  // Red
+                    }
+
+                    // Set shipping method
+                    document.getElementById("shippingMethod").textContent = data.shippingMethod;
+
+                    // Calculate ETA based on distance and shipping method
+                    const deliveryDate = calculateETA(data.shippingMethod, data.distance);
+                    document.getElementById("deliveryDate").textContent = deliveryDate;
+
+                    // Update pending timestamps in the updates array with calculated delivery date
+                    const deliveryDateObj = new Date(deliveryDate);
+                    const formattedDeliveryDate = `Expected by ${deliveryDateObj.getDate()} ${getMonthName(deliveryDateObj.getMonth())} ${deliveryDateObj.getFullYear()}`;
+
+                    // Update pending timestamps in the updates array
+                    data.updates.forEach((update, index) => {
+                        if (update.status === "pending") {
+                            update.date = formattedDeliveryDate;
+                        }
+                    });
+
+                    // Populate timeline
+                    const statusTimeline = document.getElementById("statusTimeline");
+                    statusTimeline.innerHTML = "";
+
+                    data.updates.forEach(update => {
+                        const timelineItem = createTimelineItem(update.step, update.date, update.status);
+                        statusTimeline.appendChild(timelineItem);
+                    });
+                } else {
+                    document.getElementById("orderStatus").textContent = "Not Found";
+                    document.getElementById("orderStatus").style.backgroundColor = "#dc3545"; // Red
+                    document.getElementById("deliveryDate").textContent = "N/A";
+                    document.getElementById("shippingMethod").textContent = "N/A";
+                }
+            }, 1000); // Simulate 1 second delay
+        }
+
+        // Helper function to get month name
+        function getMonthName(monthIndex) {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return months[monthIndex];
+        }
+
+        // Function to calculate ETA based on distance and shipping method
+        function calculateETA(shippingMethod, distance) {
+            const today = new Date();
+            let deliveryDays = 0;
+
+            // Calculate delivery days based on shipping method and distance
+            if (shippingMethod.toLowerCase().includes("express")) {
+                // Express shipping: Faster delivery based on distance
+                if (distance <= 50) {
+                    deliveryDays = 1; // Same day or next day for very short distances
+                } else if (distance <= 200) {
+                    deliveryDays = 1; // 1 day for short distances
+                } else if (distance <= 500) {
+                    deliveryDays = 2; // 2 days for medium distances
+                } else if (distance <= 1000) {
+                    deliveryDays = 3; // 3 days for longer distances
+                } else {
+                    deliveryDays = 4; // 4 days for very long distances
+                }
+            } else {
+                // Standard shipping: Slower delivery based on distance
+                if (distance <= 50) {
+                    deliveryDays = 2; // 2 days for very short distances
+                } else if (distance <= 200) {
+                    deliveryDays = 3; // 3 days for short distances
+                } else if (distance <= 500) {
+                    deliveryDays = 5; // 5 days for medium distances
+                } else if (distance <= 1000) {
+                    deliveryDays = 7; // 7 days for longer distances
+                } else {
+                    deliveryDays = 10; // 10 days for very long distances
+                }
+            }
+
+            // Calculate the delivery date
+            const deliveryDate = new Date(today);
+            deliveryDate.setDate(today.getDate() + deliveryDays);
+
+            // Format the date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return deliveryDate.toLocaleDateString('en-US', options);
+        }
+
+        // Execute the fetch
+        fetchOrderStatus(orderId);
+    </script>
+</body>
+
+</html>

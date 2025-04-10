@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin Settings</title>
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/AdminDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+            <div class="admin-info">
+                <div class="admin-avatar">
+                    <img src="img/logo.jpg" alt="CSI LOGO">
+                </div>
+                <div class="admin-name" id="adminName">Admin</div>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="dashboard.html"><i
+                        class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+            <li class="nav-item"><a href="adminPanel.html"><i class="fas fa-file-alt"></i><span>Orders</span></a>
+            </li>
+            <li class="nav-item"><a href="admin-manage.html"><i class="fas fa-shopping-cart"></i><span>Manage
+                        Stock</span></a></li>
+            <li class="nav-item active"><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+            <li class="nav-item"><a href="review.html"><i class="fas fa-comment-alt"></i><span>Feedback</span></a></li>
+            <li class="nav-item" id="logoutBtn"><a href="AdminLogout.html"><i
+                        class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Settings Content -->
+    <div class="settings-content">
+        <h2>Admin Settings</h2>
+
+        <section class="settings-section">
+            <h3>Account Settings</h3>
+            <button class="btn" id="changePasswordBtn">Change Password</button>
+            <button class="btn" id="updateEmailBtn">Update Email</button>
+            <button class="btn" id="logoutAllBtn">Logout from all Devices</button>
+        </section>
+
+        <section class="settings-section">
+            <h3>Order & Stock Settings</h3>
+            <label><input type="checkbox" id="enableOrdersCheck"> Enable New Orders</label>
+            <label><input type="checkbox" id="lowStockCheck"> Low Stock Alerts</label>
+        </section>
+
+        <section class="settings-section">
+            <h3>Notification Settings</h3>
+            <label><input type="checkbox" id="emailAlertsCheck"> Enable Email Alerts</label>
+            <label><input type="checkbox" id="smsAlertsCheck"> Enable SMS Alerts</label>
+        </section>
+
+        <section class="settings-section">
+            <h3>Database & Backup</h3>
+            <button class="btn" id="exportDataBtn">Export Data</button>
+            <button class="btn" id="backupDbBtn">Backup Database</button>
+            <button class="btn btn-danger" id="resetDbBtn">Reset Database</button>
+        </section>
+
+        <section class="settings-section">
+            <h3>UI Customization</h3>
+            <label><input type="checkbox" id="darkModeToggle"> Dark Mode</label>
+        </section>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfz7OSbRtVvw1JpW9rA0EXw3rBHmBheSI",
+            authDomain: "admin-panel-db.firebaseapp.com",
+            databaseURL: "https://admin-panel-db-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "admin-panel-db",
+            storageBucket: "admin-panel-db.firebasestorage.app",
+            messagingSenderId: "225211498970",
+            appId: "1:225211498970:web:19966d4d17189c888700e3",
+            measurementId: "G-XQBG61N407"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+        let currentUser = null;
+
+        // Load user settings from Firebase
+        function loadUserSettings(userId) {
+            // Reference to the settings in Firebase
+            const settingsRef = database.ref('admin_settings/' + userId);
+
+            settingsRef.once('value')
+                .then((snapshot) => {
+                    const settings = snapshot.val() || {};
+
+                    // Apply settings to checkboxes with default values
+                    document.getElementById('enableOrdersCheck').checked = settings.hasOwnProperty('enableOrders') ? settings.enableOrders : true;
+                    document.getElementById('lowStockCheck').checked = settings.hasOwnProperty('lowStockAlerts') ? settings.lowStockAlerts : true;
+                    document.getElementById('emailAlertsCheck').checked = settings.hasOwnProperty('emailAlerts') ? settings.emailAlerts : true;
+                    document.getElementById('smsAlertsCheck').checked = settings.hasOwnProperty('smsAlerts') ? settings.smsAlerts : false;
+
+                    // Apply dark mode setting
+                    if (settings.darkMode) {
+                        document.body.classList.add('dark-mode');
+                        document.getElementById('darkModeToggle').checked = true;
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error loading settings:", error);
+                    alert("Failed to load settings: " + error.message);
+                });
+        }
+
+        // Save setting to Firebase
+        function saveSetting(settingName, value) {
+            if (!currentUser) return;
+
+            const settingsRef = database.ref('admin_settings/' + currentUser.uid);
+            let update = {};
+            update[settingName] = value;
+
+            return settingsRef.update(update)
+                .then(() => {
+                    console.log(`Setting "${settingName}" saved successfully`);
+                    return true;
+                })
+                .catch((error) => {
+                    console.error(`Error saving setting "${settingName}":`, error);
+                    alert(`Failed to save setting: ${error.message}`);
+                    return false;
+                });
+        }
+
+        // Dark mode toggle
+        document.getElementById("darkModeToggle").addEventListener("change", function () {
+            document.body.classList.toggle("dark-mode");
+            saveSetting('darkMode', document.body.classList.contains("dark-mode"));
+        });
+
+        // Order & Stock Settings checkboxes
+        document.getElementById('enableOrdersCheck').addEventListener('change', function () {
+            saveSetting('enableOrders', this.checked);
+        });
+
+        document.getElementById('lowStockCheck').addEventListener('change', function () {
+            saveSetting('lowStockAlerts', this.checked);
+        });
+
+        // Notification Settings checkboxes
+        document.getElementById('emailAlertsCheck').addEventListener('change', function () {
+            saveSetting('emailAlerts', this.checked);
+        });
+
+        document.getElementById('smsAlertsCheck').addEventListener('change', function () {
+            saveSetting('smsAlerts', this.checked);
+        });
+
+        document.getElementById('changePasswordBtn').addEventListener('click', function () {
+            const modal = document.createElement("div");
+            modal.className = "modal";
+            modal.innerHTML = ` 
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Change Password</h3>
+        <form id="passwordChangeForm">
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn">Update Password</button>
+        </form>
+    </div>`;
+
+            document.body.appendChild(modal);
+
+            modal.querySelector(".close-btn").addEventListener("click", function () {
+                document.body.removeChild(modal);
+            });
+
+            const passwordForm = modal.querySelector("#passwordChangeForm");
+
+            passwordForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const currentPassword = modal.querySelector("#currentPassword").value;
+                const newPassword = modal.querySelector("#newPassword").value;
+                const confirmPassword = modal.querySelector("#confirmPassword").value;
+
+                if (newPassword !== confirmPassword) {
+                    alert("New passwords don't match!");
+                    return;
+                }
+
+                const currentUser = firebase.auth().currentUser;
+                if (!currentUser) {
+                    alert("User not logged in!");
+                    return;
+                }
+
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    currentUser.email,
+                    currentPassword
+                );
+
+                currentUser.reauthenticateWithCredential(credential)
+                    .then(() => currentUser.updatePassword(newPassword))
+                    .then(() => {
+                        alert("Password updated successfully!");
+                        document.body.removeChild(modal);
+                    })
+                    .catch((error) => {
+                        alert("Error: " + error.message);
+                    });
+            });
+        });
+
+        // Update Email
+        document.getElementById('updateEmailBtn').addEventListener('click', function () {
+            const modal = document.createElement("div");
+            modal.className = "modal";
+            modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h3>Update Email</h3>
+                <form id="emailUpdateForm">
+                    <div class="form-group">
+                        <label for="currentEmail">Current Email</label>
+                        <input type="email" id="currentEmail" value="${currentUser ? currentUser.email : ''}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="newEmail">New Email</label>
+                        <input type="email" id="newEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Password for Verification</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn">Update Email</button>
+                </form>
+            </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Close modal functionality
+            modal.querySelector(".close-btn").addEventListener("click", function () {
+                document.body.removeChild(modal);
+            });
+
+            // Handle form submission
+            document.getElementById("emailUpdateForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const newEmail = document.getElementById("newEmail").value;
+                const confirmPassword = document.getElementById("confirmPassword").value;
+
+                // Firebase reauthentication and email update
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    currentUser.email,
+                    confirmPassword
+                );
+
+                currentUser.reauthenticateWithCredential(credential)
+                    .then(() => {
+                        return currentUser.updateEmail(newEmail);
+                    })
+                    .then(() => {
+                        alert("Email updated successfully to " + newEmail);
+                        document.body.removeChild(modal);
+                        // Update displayed name
+                        document.getElementById('adminName').textContent = newEmail.split('@')[0];
+                    })
+                    .catch((error) => {
+                        alert("Error: " + error.message);
+                    });
+            });
+        });
+
+        // Backup Database
+        document.getElementById('backupDbBtn').addEventListener('click', function () {
+            // In a real application, this would call a Cloud Function to create a backup
+            // For now, we'll create a timestamp in the database to simulate a backup request
+            const backupRef = database.ref('backup_requests');
+            backupRef.push({
+                requestedBy: currentUser.uid,
+                requestedAt: firebase.database.ServerValue.TIMESTAMP,
+                status: 'pending'
+            })
+                .then(() => {
+                    alert("Database backup initiated. You will receive an email when completed.");
+                })
+                .catch((error) => {
+                    console.error("Backup error:", error);
+                    alert("Failed to initiate backup: " + error.message);
+                });
+        });
+
+        // Reset Database
+        document.getElementById('resetDbBtn').addEventListener('click', function () {
+            const confirmReset = confirm("WARNING: This will reset the entire database and cannot be undone. Are you sure?");
+            if (!confirmReset) return;
+
+            const secondConfirm = confirm("This is your last warning! All orders and inventory data will be deleted!");
+            if (!secondConfirm) return;
+
+            const confirmPassword = prompt("Enter your admin password to confirm this action:");
+            if (!confirmPassword) return;
+
+            // Reauthenticate first
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                currentUser.email,
+                confirmPassword
+            );
+
+            currentUser.reauthenticateWithCredential(credential)
+                .then(() => {
+                    // Check if user has admin privileges by reading from a special admin_roles node
+                    return database.ref('admin_roles/' + currentUser.uid).once('value');
+                })
+                .then((snapshot) => {
+                    const adminRole = snapshot.val();
+                    if (!adminRole || adminRole.role !== 'admin') {
+                        throw new Error("You do not have permission to reset the database.");
+                    }
+
+                    // Log the reset operation for security audit
+                    return database.ref('admin_logs').push({
+                        action: 'database_reset',
+                        performedBy: currentUser.uid,
+                        performedAt: firebase.database.ServerValue.TIMESTAMP,
+                        userEmail: currentUser.email
+                    });
+                })
+                .then(() => {
+                    // Reset specific paths
+                    const resetPromises = [
+                        database.ref('orders').remove(),
+                        database.ref('inventory').remove(),
+                        // Create initial data structures
+                        database.ref('orders').set({
+                            initialized: new Date().toISOString()
+                        }),
+                        database.ref('inventory').set({
+                            initialized: new Date().toISOString()
+                        })
+                    ];
+
+                    return Promise.all(resetPromises);
+                })
+                .then(() => {
+                    alert("Database reset completed. The system will log you out now.");
+                    return auth.signOut();
+                })
+                .catch((error) => {
+                    console.error("Reset error:", error);
+                    alert("Failed to reset database: " + error.message);
+                });
+        });
+
+        // Logout button
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            auth.signOut()
+                .then(() => {
+                    window.location.href = 'Admin.html';
+                })
+                .catch((error) => {
+                    console.error("Logout error:", error);
+                    alert("Error logging out: " + error.message);
+                });
+        });
+
+        // Add CSS for the modals 
+        const modalStyle = document.createElement('style');
+        modalStyle.textContent = `
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+            
+            .modal-content {
+                background-color: white;
+                padding: 20px;
+                border-radius: 5px;
+                width: 400px;
+                max-width: 90%;
+                position: relative;
+            }
+            
+            .dark-mode .modal-content {
+                background-color: #333;
+                color: white;
+            }
+            
+            .close-btn {
+                position: absolute;
+                right: 15px;
+                top: 10px;
+                font-size: 24px;
+                cursor: pointer;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+            }
+            
+            .form-group input {
+                width: 100%;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+            
+            .dark-mode .form-group input {
+                background-color: #444;
+                color: white;
+                border-color: #555;
+            }
+        `;
+        document.head.appendChild(modalStyle);
+    </script>
+</body>
+
+</html>

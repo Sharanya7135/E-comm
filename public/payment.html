@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/payment.css">
+    <title>Payment</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Select Payment Method</h2>
+        <div class="payment-methods">
+            <button class="payment-btn" onclick="confirmOrder('Cash on Delivery (COD)')">
+                <span class="payment-icon">💵</span>
+                Cash on Delivery (COD)
+            </button>
+        </div>
+    </div>
+
+    <div id="confirmation-overlay" class="overlay hidden">
+        <div class="confirmation-message">
+            <div class="spinner"></div>
+            <h3>ORDER CONFIRMED</h3>
+            <p>PLEASE WAIT WHILE WE TAKE YOU TO ANOTHER PAGE</p>
+            <p class="small">IT MIGHT TAKE A WHILE...</p>
+        </div>
+    </div>
+
+    <script>
+        
+        function confirmOrder(paymentMethod) {
+            // Get cart and delivery details from localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let deliveryDetails = JSON.parse(localStorage.getItem('deliveryDetails')) || {};
+
+            console.log('Order Details:');
+            console.log('Cart:', cart);
+            console.log('Delivery Details:', deliveryDetails);
+            console.log('Payment Method:', paymentMethod);
+
+            // Confirm order before proceeding
+            if (confirm(`Are you sure you want to proceed with ${paymentMethod}?`)) {
+
+                // Show confirmation overlay instead of alert
+                document.getElementById('confirmation-overlay').classList.remove('hidden');
+
+                // Redirect after a delay (3 seconds)
+                setTimeout(function () {
+                    window.location.href = "orderConfirm.html";
+                }, 3000);
+            } else {
+                console.log('Order cancelled. Redirecting to orderFailed.html');
+                window.location.href = "orderFailed.html";
+            }
+        } console.log(localStorage.getItem("deliveryDetails"));
+    </script>
+</body>
+
+</html>

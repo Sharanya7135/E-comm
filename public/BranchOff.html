@@ -1,0 +1,217 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Office Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/Detail.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        /* Dropdown */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Branch Selection */
+        #branches {
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            font-size: 14px;
+        }
+
+        #address-display {
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Component -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Dashboard</h3>
+            <button class="toggle-btn" id="toggleBtn">☰</button>
+        </div>
+        <div class="profile-container">
+            <img src="https://avatar.iran.liara.run/public/93" alt="Profile Picture" class="profile-picture"
+                id="profilePicture">
+            <div class="user-info">
+                <span class="user-name" id="welcomeMessage">Welcome, Guest</span>
+                <span class="user-email" id="userEmail"></span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active" onclick="redirectTo('Detail')">
+                <i>📊</i>
+                <span>Dashboard</span>
+            </div>
+            <div class="menu-item" onclick="redirectTo('profile')">
+                <i>👤</i>
+                <span>Profile</span>
+            </div>
+            <div class="menu-item" onclick="redirectTo('cart')">
+                <i>🛒</i>
+                <span>Cart</span>
+            </div>
+            <div class="menu-item" onclick="redirectTo('feedback')">
+                <i>📝</i>
+                <span>Feedback</span>
+            </div>
+            <div class="menu-item" onclick="redirectTo('FAQ')">
+                <i>❓</i>
+                <span>Help</span>
+            </div>
+            <div class="menu-item" onclick="redirectTo('chatbot')">
+                <i>🤖</i>
+                <span>Chatbot</span>
+            </div>
+        </div>
+    </div>
+    <header>
+        <div> <a>CSI</a></div>
+        <div class="dropdown">
+            <a href="login.html" class="dropbtn">Login</a>
+            <div class="dropdown-content">
+                <a href="Admin.html">Admin Login</a>
+            </div>
+        </div>
+        <a href="index.html">Home</a>
+        <a href="Detail.html">Product Details</a>
+        <a href="RegOffice.html">Registered Office</a>
+        <a href="BranchOff.html">Branch Office</a>
+        <a href="Cart.html"><i class="fas fa-shopping-cart"></i></a>
+        <div class="dropdown">
+            <div class="dropbtn"><i class="fas fa-ellipsis-v"></i></div>
+            <div class="dropdown-content">
+                <a href="chatbot.html">Chatbot Help</a>
+                <a href="FAQ.html">Help</a>
+                <a href="logout.html">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="page">
+            <h1>Branch Office Page</h1>
+            <h3>Branch Office Address:
+                <select id="branches" onchange="updateAddress()">
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Manglore">Mangalore</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                </select>
+            </h3>
+        </div>
+        <!-- Address Display -->
+        <div id="address-display" style="font-weight:100; margin-top: 10px; font-size: 15px;"></div>
+
+        <script>
+            function updateAddress() {
+                let branch = document.getElementById("branches").value;
+                let address = "";
+
+                // Defined addresses
+                if (branch === "Bangalore") {
+                    address = "M/S. COMPUTER SOLUTIONS (INDIA) PVT. LTD.,<br>Lakshmi Narasimha,Shop No 35, 3rd cross,<br> K R Layout, 6thPhase, J. P. Nagar,<br> Bengaluru - 560078 Mob: 8080707051";
+                } else if (branch === "Manglore") {
+                    address = "M/S. COMPUTER SOLUTIONS (INDIA) PVT. LTD.,<br>Dream, Shop No. 9/12 Murukaveri,<br>Kinnigoli Post,<br> Mangaluru - 574150  Mob: 9821036306";
+                } else if (branch === "Hyderabad") {
+                    address = "M/S. COMPUTER SOLUTIONS (INDIA) PVT. LTD.,<br>3 A /1408, SMRVinay Fountainhead, <br>Hmws & S. B. Road,Miyapur, <br>Hyderabad. - 500049 Mob: 8080404053";
+                }
+
+                // Display address
+                document.getElementById("address-display").innerHTML = address;
+            }
+            function redirectTo(page) {
+                window.location.href = page + ".html";
+            }
+
+            //sidebar javascript fucntions
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleBtn');
+            const body = document.body;
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+            });
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        </script>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <!-- Footer Top -->
+            <div class="footer-links">
+                <!-- Get to Know Us -->
+                <div class="footer-section">
+                    <h3>Get to Know Us</h3>
+                    <a href="AboutUs.html">About Us</a><br>
+                    <a href="PaymentPolicy.html">Payment</a><br>
+                    <a href="AD.html">Authorized Dealers</a><br>
+                    <a href="Team.html">Team</a>
+                </div>
+
+                <!-- Make Money with Us -->
+                <div class="footer-section">
+                    <h3>Make Money with Us</h3>
+                    <a href="Vendor.html">Vendor Registration</a><br>
+                    <a href="collab.html">Collaboration </a><br>
+                    <a href="Franchise.html">Franchise</a><br>
+                    <a href="Advertise.html">Advertise With Us</a>
+                </div>
+
+                <!-- Customer Service -->
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <a href="Contact.html">Help Center</a><br>
+                    <a href="FAQ.html">Returns & Refunds</a><br>
+                    <a href="feedback.html">Feedback</a><br>
+                    <a href="Searchtrack.html">Order Tracking</a><br>
+                </div>
+
+                <!-- Connect with Us -->
+                <div class="footer-section">
+                    <h3>Connect with Us</h3>
+                    <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a><br>
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a><br>
+                    <a href="mailto:csi@csimumbai.com" aria-label="Email">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom" style="color:blue">
+                <p>&copy; 2023 Computer Solutions Ind. Pvt. Ltd. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

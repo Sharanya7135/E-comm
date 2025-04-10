@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/AdminDashboard.css">
+    <title>Admin Feedback Panel</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 20px;
+            background: #ecf0f1;
+            min-height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .feedback-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .feedback-item {
+            padding: 8px;
+            margin: 5px 0;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            background: #fff;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+        }
+
+        #adminPanel.hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+            <div class="admin-info">
+                <div class="admin-avatar">
+                    <img src="img/logo.jpg" alt="CSI LOGO">
+                </div>
+                <div class="admin-name" id="adminName">Admin</div>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="dashboard.html"><i
+                        class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+            <li class="nav-item"><a href="adminPanel.html"><i class="fas fa-file-alt"></i><span>Orders</span></a>
+            </li>
+            <li class="nav-item"><a href="admin-manage.html"><i class="fas fa-shopping-cart"></i><span>Manage
+                        Stock</span></a></li>
+            <li class="nav-item"><a href="settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+            <li class="nav-item active"><a href="review.html"><i class="fas fa-comment-alt"></i><span>Feedback</span></a></li>
+            <li class="nav-item" id="logoutBtn"><a href="AdminLogout.html"><i
+                        class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Admin Feedback Panel</h2>
+        <div id="adminPanel">
+            <h3>Feedback List</h3>
+            <div class="feedback-container" id="feedbackList">
+                <p>Loading feedback...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpGap1ccsVKsfE0y3XlYlBhoXplBfCNKg",
+            authDomain: "feedback-6fa2d.firebaseapp.com",
+            databaseURL: "https://feedback-6fa2d-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "feedback-6fa2d",
+            storageBucket: "feedback-6fa2d.firebasestorage.app",
+            messagingSenderId: "1091709526633",
+            appId: "1:1091709526633:web:7244a17e45840c21f338f8",
+            measurementId: "G-LG17NLZMYR"
+        };
+
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Fetch Feedback and Display on Admin Page
+        function fetchFeedback() {
+            const feedbackList = document.getElementById("feedbackList");
+            feedbackList.innerHTML = "<p>Loading feedback...</p>";
+
+            database.ref("feedbacks").orderByChild("timestamp").on("value", snapshot => {
+                feedbackList.innerHTML = "";
+                if (!snapshot.exists()) {
+                    feedbackList.innerHTML = "<p>No feedback available.</p>";
+                    return;
+                }
+
+                snapshot.forEach(childSnapshot => {
+                    const feedback = childSnapshot.val();
+                    const feedbackId = childSnapshot.key;
+
+                    const feedbackElement = document.createElement("div");
+                    feedbackElement.classList.add("feedback-item");
+                    feedbackElement.innerHTML = `
+                        <p><strong>${feedback.name}</strong></p>
+                        <p>${feedback.comments}</p>
+                        <p class="stars">${'★'.repeat(feedback.rating)}${'☆'.repeat(5 - feedback.rating)}</p>
+                        <p>${feedback.improvements}</p>
+                        <button class="delete-btn" onclick="deleteFeedback('${feedbackId}')">Delete</button>
+                    `;
+                    feedbackList.appendChild(feedbackElement);
+                });
+            });
+        }
+        function deleteFeedback(id) {
+            database.ref("feedbacks/" + id).remove();
+        }
+
+        fetchFeedback();
+    </script>
+</body>
+
+</html>
