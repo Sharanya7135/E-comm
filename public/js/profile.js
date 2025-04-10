@@ -72,7 +72,7 @@ auth.onAuthStateChanged(async (user) => {
         }
     } else {
         imageLoading.style.display = "none"; // Hide loading if no user
-        welcomeMessage.innerText = "Welcome, Guest";
+        welcomeMessage.innerText = "Welcome ";
         userEmail.innerText = "";
         profilePicture.src = "img/pfp.jpg";
         profilePic.src = "img/pfp.jpg";
@@ -80,50 +80,6 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-//new
-// document.addEventListener("DOMContentLoaded", () => {
-//     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-//         .then(() => {
-//             console.log("✅ Auth persistence set to LOCAL");
-//         })
-//         .catch((error) => {
-//             console.error("❌ Persistence error:", error.message);
-//         });
-
-//     auth.onAuthStateChanged((user) => {
-//         if (user) {
-//             console.log("✅ User is authenticated:", user.email);
-
-//             db.collection("users").doc(user.uid).get()
-//                 .then((doc) => {
-//                     if (doc.exists) {
-//                         const userData = doc.data();
-//                         sessionStorage.setItem("userSession", JSON.stringify({
-//                             userId: user.uid,
-//                             email: userData.email,
-//                         }));
-//                         console.log("✅ Session rehydrated");
-
-//                         // Show the cart and hide loading
-//                         document.getElementById("loading").style.display = "none";
-//                         document.querySelector(".cart-container").style.display = "block";
-
-//                         displayCart();
-//                     } else {
-//                         console.log("⚠️ User document not found");
-//                         redirectToLogin();
-//                     }
-//                 })
-//                 .catch((error) => {
-//                     console.error("🔥 Error fetching user:", error);
-//                     redirectToLogin();
-//                 });
-//         } else {
-//             console.log("❌ No user found. Redirecting to login...");
-//             redirectToLogin();
-//         }
-//     });
-// });
 // Elements
 const profilePic = document.getElementById("profile-pic");
 const profileImageInput = document.getElementById("profileImage");
@@ -136,8 +92,6 @@ const logoutBtn = document.getElementById("logoutBtn");
 const welcomeMessage = document.getElementById("welcomeMessage");
 const userEmail = document.getElementById("userEmail");
 const profilePicture = document.getElementById("profilePicture");
-
-
 
 // Convert Image to Base64
 function convertToBase64(file) {

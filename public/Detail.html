@@ -24,7 +24,7 @@
       <img src="https://avatar.iran.liara.run/public/93" alt="Profile Picture" class="profile-picture"
         id="profilePicture">
       <div class="user-info">
-        <span class="user-name" id="welcomeMessage">Welcome, Guest</span>
+        <span class="user-name" id="welcomeMessage">Welcome </span>
         <span class="user-email" id="userEmail"></span>
       </div>
     </div>
@@ -264,7 +264,7 @@
           if (loginLink) loginLink.style.display = "none";
         } else {
           // Not logged in OR session cleared
-          welcomeMessage.textContent = "Welcome, Guest";
+          welcomeMessage.textContent = "Welcome ";
           userEmail.textContent = "";
           profilePicture.src = "https://avatar.iran.liara.run/public/93";
           if (loginLink) loginLink.style.display = "block";
