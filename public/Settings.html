@@ -32,7 +32,7 @@
             </li>
             <li class="nav-item"><a href="admin-manage.html"><i class="fas fa-shopping-cart"></i><span>Manage
                         Stock</span></a></li>
-            <li class="nav-item active"><a href="ettings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+            <li class="nav-item active"><a href="Settings.html"><i class="fas fa-cog"></i><span>Settings</span></a></li>
             <li class="nav-item"><a href="review.html"><i class="fas fa-comment-alt"></i><span>Feedback</span></a></li>
             <li class="nav-item" id="logoutBtn"><a href="AdminLogout.html"><i
                         class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
@@ -88,11 +88,45 @@
             measurementId: "G-XQBG61N407"
         };
 
-        // Initialize Firebase
+        // === eCommerce App Configuration ===
+        const ecommerceConfig = {
+            apiKey: "AIzaSyC9D3zvSq6mmDStkci5AzifKeS8qWmV4Z0",
+            authDomain: "ecommerce-website-d2f71.firebaseapp.com",
+            databaseURL: "https://ecommerce-website-d2f71-default-rtdb.firebaseio.com",
+            projectId: "ecommerce-website-d2f71",
+            storageBucket: "ecommerce-website-d2f71.appspot.com",
+            messagingSenderId: "1041464946464",
+            appId: "1:1041464946464:web:fe7ec9ffb7300dd60c687b",
+            measurementId: "G-XN4C3QQHF6"
+        };
+
+        // Initialize admin Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const auth = firebase.auth();
-        let currentUser = null;
+
+        const ecommerceApp = firebase.initializeApp(ecommerceConfig, "ecommerce");
+        const ecommerceAuth = ecommerceApp.auth();
+        const ecommerceDB = ecommerceApp.firestore();
+        const db = ecommerceApp.database();
+
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        currentUser = user;
+                        document.getElementById('adminName').textContent = user.email.split('@')[0];
+                        loadUserSettings(user.uid);
+                    } else {
+                        alert("You are not logged in. Redirecting to login page.");
+                        // Not logged in, redirect
+                        window.location.href = "Admin.html";
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error("Persistence error:", error.message);
+            });
 
         // Load user settings from Firebase
         function loadUserSettings(userId) {
@@ -169,21 +203,25 @@
             const modal = document.createElement("div");
             modal.className = "modal";
             modal.innerHTML = ` 
-<div class="modal-content">
-    <span class="close-btn">&times;</span>
-    <h3>Change Password</h3>
-    <form id="passwordChangeForm">
-        <div class="form-group">
-            <label for="newPassword">New Password</label>
-            <input type="password" id="newPassword" required>
-        </div>
-        <div class="form-group">
-            <label for="confirmPassword">Confirm New Password</label>
-            <input type="password" id="confirmPassword" required>
-        </div>
-        <button type="submit" class="btn">Update Password</button>
-    </form>
-</div>`;
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Change Password</h3>
+        <form id="passwordChangeForm">
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn">Update Password</button>
+        </form>
+    </div>`;
 
             document.body.appendChild(modal);
 
@@ -195,6 +233,7 @@
 
             passwordForm.addEventListener("submit", function (e) {
                 e.preventDefault();
+                const currentPassword = modal.querySelector("#currentPassword").value;
                 const newPassword = modal.querySelector("#newPassword").value;
                 const confirmPassword = modal.querySelector("#confirmPassword").value;
 
@@ -203,7 +242,19 @@
                     return;
                 }
 
-                currentUser.updatePassword(newPassword)
+                const currentUser = firebase.auth().currentUser;
+                if (!currentUser) {
+                    alert("User not logged in!");
+                    return;
+                }
+
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    currentUser.email,
+                    currentPassword
+                );
+
+                currentUser.reauthenticateWithCredential(credential)
+                    .then(() => currentUser.updatePassword(newPassword))
                     .then(() => {
                         alert("Password updated successfully!");
                         document.body.removeChild(modal);
@@ -213,7 +264,6 @@
                     });
             });
         });
-
 
         // Update Email
         document.getElementById('updateEmailBtn').addEventListener('click', function () {
@@ -226,7 +276,7 @@
                 <form id="emailUpdateForm">
                     <div class="form-group">
                         <label for="currentEmail">Current Email</label>
-                        <input type="email" id="currentEmail" value="admins@gmail.com" disabled>
+                        <input type="email" id="currentEmail" value="${currentUser ? currentUser.email : ''}" disabled>
                     </div>
                     <div class="form-group">
                         <label for="newEmail">New Email</label>
