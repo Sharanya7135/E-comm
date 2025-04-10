@@ -169,25 +169,21 @@
             const modal = document.createElement("div");
             modal.className = "modal";
             modal.innerHTML = ` 
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h3>Change Password</h3>
-        <form id="passwordChangeForm">
-            <div class="form-group">
-                <label for="currentPassword">Current Password</label>
-                <input type="password" id="currentPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" id="newPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirm New Password</label>
-                <input type="password" id="confirmPassword" required>
-            </div>
-            <button type="submit" class="btn">Update Password</button>
-        </form>
-    </div>`;
+<div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3>Change Password</h3>
+    <form id="passwordChangeForm">
+        <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" required>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm New Password</label>
+            <input type="password" id="confirmPassword" required>
+        </div>
+        <button type="submit" class="btn">Update Password</button>
+    </form>
+</div>`;
 
             document.body.appendChild(modal);
 
@@ -199,7 +195,6 @@
 
             passwordForm.addEventListener("submit", function (e) {
                 e.preventDefault();
-                const currentPassword = modal.querySelector("#currentPassword").value;
                 const newPassword = modal.querySelector("#newPassword").value;
                 const confirmPassword = modal.querySelector("#confirmPassword").value;
 
@@ -208,13 +203,7 @@
                     return;
                 }
 
-                const credential = firebase.auth.EmailAuthProvider.credential(
-                    currentUser.email,
-                    currentPassword
-                );
-
-                currentUser.reauthenticateWithCredential(credential)
-                    .then(() => currentUser.updatePassword(newPassword))
+                currentUser.updatePassword(newPassword)
                     .then(() => {
                         alert("Password updated successfully!");
                         document.body.removeChild(modal);
@@ -224,6 +213,7 @@
                     });
             });
         });
+
 
         // Update Email
         document.getElementById('updateEmailBtn').addEventListener('click', function () {
