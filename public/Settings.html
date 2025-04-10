@@ -94,24 +94,6 @@
         const auth = firebase.auth();
         let currentUser = null;
 
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(() => {
-        return auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('adminName').textContent = user.email.split('@')[0];
-                loadUserSettings(user.uid);
-            } else {
-                // Redirect to login if no user is found
-                window.location.href = 'Admin.html';
-            }
-        });
-    })
-    .catch((error) => {
-        console.error("Error setting persistence:", error);
-    });
-
-
         // Load user settings from Firebase
         function loadUserSettings(userId) {
             // Reference to the settings in Firebase
@@ -226,12 +208,6 @@
                     return;
                 }
 
-                const currentUser = firebase.auth().currentUser;
-                if (!currentUser) {
-                    alert("User not logged in!");
-                    return;
-                }
-
                 const credential = firebase.auth.EmailAuthProvider.credential(
                     currentUser.email,
                     currentPassword
@@ -260,7 +236,7 @@
                 <form id="emailUpdateForm">
                     <div class="form-group">
                         <label for="currentEmail">Current Email</label>
-                        <input type="email" id="currentEmail" value="${currentUser ? currentUser.email : ''}" disabled>
+                        <input type="email" id="currentEmail" value="admins@gmail.com" disabled>
                     </div>
                     <div class="form-group">
                         <label for="newEmail">New Email</label>
