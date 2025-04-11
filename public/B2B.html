@@ -2,138 +2,120 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business & Collaboration</title>
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>B2B Services</title>
     <style>
-               .container {
-            max-width: 1000px;
-            margin: 40px auto;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
             padding: 20px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 40px;
+            color: #2c3e50;
         }
 
-        .section {
-            margin-bottom: 30px;
+        .service {
+            margin-bottom: 25px;
         }
 
-        .section h2 {
-            color: #222;
-            font-size: 1.5em;
+        .service h2 {
+            color: #2980b9;
             margin-bottom: 10px;
         }
 
-        .section p {
-            color: #555;
+        .service p {
             line-height: 1.6;
         }
 
-        a.learn-more {
+        .contact-btn {
             display: inline-block;
-            margin-top: 10px;
-            color: #007BFF;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #2980b9;
+            color: white;
             text-decoration: none;
+            border-radius: 5px;
         }
 
-        a.learn-more:hover {
-            text-decoration: underline;
+        .contact-btn:hover {
+            background: #3498db;
         }
     </style>
 </head>
 
 <body>
-    <!-- Sidebar Component -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>Dashboard</h3>
-            <button class="toggle-btn" id="toggleBtn">☰</button>
+    <header>
+        <div>
+            <a href="#">CSI</a>
         </div>
-        <div class="profile-container">
-            <img src="https://avatar.iran.liara.run/public/93" alt="Profile Picture" class="profile-picture"
-                id="profilePicture">
-            <div class="user-info">
-                <span class="user-name" id="welcomeMessage">Welcome </span>
-                <span class="user-email" id="userEmail"></span>
-            </div>
-        </div>
-        <div class="sidebar-menu">
-            <div class="menu-item active" onclick="redirectTo('Detail')">
-                <i>📊</i>
-                <span>Dashboard</span>
-            </div>
-            <div class="menu-item" onclick="redirectTo('profile')">
-                <i>👤</i>
-                <span>Profile</span>
-            </div>
-            <div class="menu-item" onclick="redirectTo('Cart')">
-                <i>🛒</i>
-                <span>Cart</span>
-            </div>
-            <div class="menu-item" onclick="redirectTo('feedback')">
-                <i>📝</i>
-                <span>Feedback</span>
-            </div>
-            <div class="menu-item" onclick="redirectTo('FAQ')">
-                <i>❓</i>
-                <span>Help</span>
-            </div>
-            <div class="menu-item" onclick="redirectTo('chatbot')">
-                <i>🤖</i>
-                <span>Chatbot</span>
-            </div>
-        </div>
-    </div>
-      <header>
-        <div> <a>CSI</a></div>
         <div class="dropdown">
             <a href="login.html" class="dropbtn">Login</a>
             <div class="dropdown-content">
-                <a href="Admin.html">AdminLogin</a>
+                <a href="Admin.html">Admin Login</a>
             </div>
         </div>
         <a href="index.html">Home</a>
         <a href="Detail.html">Product Details</a>
         <a href="RegOffice.html">Registered Office</a>
         <a href="BranchOff.html">Branch Office</a>
-        <a href="Cart.html"><i class="fas fa-shopping-cart"></i></a>
+        <a href="Cart.html"><i class="fas fa-shopping-cart shopping-cart"></i></a>
         <div class="dropdown">
             <div class="dropbtn"><i class="fas fa-ellipsis-v"></i></div>
             <div class="dropdown-content">
+                <a href="chatbot.html">Chatbot Help</a>
                 <a href="FAQ.html">Help</a>
-                <a href="chatbot.html">Login</a>
                 <a href="logout.html">Logout</a>
             </div>
         </div>
     </header>
-
     <div class="container">
-        <h1>For Business & Collaboration</h1>
+        <h1>Our B2B Services</h1>
+        <p>We provide customized business solutions to help companies grow and scale efficiently. Explore our key
+            offerings below:</p>
 
-        <div class="section">
-            <h2>Partner With Us</h2>
-            <p>We’re always looking for meaningful partnerships. Whether you’re a brand, service provider, or
-                enterprise, let’s build something impactful together.</p>
-            <a href="Contact.html" class="learn-more">Learn more</a>
+        <div class="service">
+            <h2>1. Enterprise Software Solutions</h2>
+            <p>Tailor-made software to streamline operations, enhance productivity, and support your enterprise's
+                digital transformation.</p>
         </div>
 
-        <div class="section">
-            <h2>Corporate Solutions</h2>
-            <p>Need custom solutions for your organization? We provide B2B services tailored to your company’s unique
-                needs.</p>
-            <a href="B2B.html" class="learn-more">Explore Solutions</a>
+        <div class="service">
+            <h2>2. Supply Chain Integration</h2>
+            <p>We help businesses manage their logistics and inventory with powerful tools that integrate seamlessly
+                with existing systems.</p>
         </div>
 
+        <div class="service">
+            <h2>3. B2B E-commerce Platforms</h2>
+            <p>Robust platforms to enable smooth and scalable B2B transactions, with secure payment gateways and
+                customizable catalogs.</p>
+        </div>
+
+        <div class="service">
+            <h2>4. CRM and Marketing Automation</h2>
+            <p>Leverage customer insights and automate your marketing efforts to improve engagement and drive B2B sales.
+            </p>
+        </div>
+
+        <div class="service">
+            <h2>5. Data Analytics & BI</h2>
+            <p>Get actionable insights with our advanced data analytics and business intelligence solutions designed for
+                B2B success.</p>
+        </div>
+
+        <a href="Contact.html" class="contact-btn">Get in Touch</a>
     </div>
     <footer>
         <div class="footer-container">
